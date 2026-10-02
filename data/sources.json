@@ -310,6 +310,35 @@
       }
     },
     {
+      "id": "auto-cardekho.com-latestcars",
+      "name": "cardekho.com/latestcars",
+      "aliases": [
+        "cardekho.com/latestcars"
+      ],
+      "domains": [
+        "cardekho.com"
+      ],
+      "entry": "https://www.cardekho.com/latestcars",
+      "auto": true,
+      "recipe": {
+        "kind": "table",
+        "ready_steps": [],
+        "table": "#rf01 > div:nth-of-type(1) > div > main > div > div:nth-of-type(1) > div:nth-of-type(1) > section > div:nth-of-type(1) > div > table",
+        "columns": {
+          "Model": "model",
+          "Price": "price"
+        },
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        },
+        "links": {},
+        "id_source": "column",
+        "id_field": "price",
+        "id_pattern": "^[A-Za-z]{2}\\.\\ \\d+\\.\\d+\\ \\-\\ \\d+\\.\\d{2}\\ [A-Za-z]{4}\\*$"
+      }
+    },
+    {
       "id": "auto-carwale.com",
       "name": "carwale.com",
       "aliases": [
@@ -963,6 +992,32 @@
       }
     },
     {
+      "id": "auto-iea.org-data-and-statistics-data-tools-global-ev-data-explorer",
+      "name": "iea.org/data-and-statistics/data-tools/global-ev-data-explorer",
+      "aliases": [
+        "iea.org/data-and-statistics/data-tools/global-ev-data-explorer"
+      ],
+      "domains": [
+        "iea.org"
+      ],
+      "entry": "https://www.iea.org/data-and-statistics/data-tools/global-ev-data-explorer",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://api.iea.org/countries/region/WORLD?",
+        "records_path": [
+          "members"
+        ],
+        "id_fields": [
+          "name"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
       "id": "auto-iea.org-reports-global-ev-outlook-2026-trends-in-electric-cars",
       "name": "iea.org/reports/global-ev-outlook-2026/trends-in-electric-cars",
       "aliases": [
@@ -1216,6 +1271,30 @@
       }
     },
     {
+      "id": "auto-lawmin.gov.in-sitemap",
+      "name": "lawmin.gov.in/sitemap",
+      "aliases": [
+        "lawmin.gov.in/sitemap"
+      ],
+      "domains": [
+        "lawmin.gov.in"
+      ],
+      "entry": "https://www.lawmin.gov.in/sitemap",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://www.lawmin.gov.in/cms/wp-json/count-posts/all",
+        "records_path": [],
+        "id_fields": [
+          "post_type"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
       "id": "auto-linkedin.com",
       "name": "linkedin.com",
       "aliases": [
@@ -1313,6 +1392,36 @@
         "id_params": [
           "path"
         ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-mahindra.com",
+      "name": "mahindra.com",
+      "aliases": [
+        "mahindra.com"
+      ],
+      "domains": [
+        "mahindra.com"
+      ],
+      "entry": "https://mahindra.com/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [
+          {
+            "click": "#block-workwithus > div > section > div:nth-of-type(2) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > a",
+            "optional": false,
+            "navigates": true
+          }
+        ],
+        "container": "#block-mahindra-content > section:nth-of-type(2) > div",
+        "item": "div",
+        "id_field": "id",
+        "id_params": [],
         "pagination": {
           "type": "none",
           "max_pages": 1
@@ -1601,6 +1710,72 @@
       }
     },
     {
+      "id": "auto-sansad.in-rs",
+      "name": "sansad.in/rs",
+      "aliases": [
+        "sansad.in/rs"
+      ],
+      "domains": [
+        "sansad.in"
+      ],
+      "entry": "https://sansad.in/rs",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://sansad.in/api_rs/ppHome/latestUpdates?locale=en",
+        "records_path": [],
+        "id_fields": [
+          "id"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-siam.in",
+      "name": "siam.in",
+      "aliases": [
+        "siam.in"
+      ],
+      "domains": [
+        "siam.in"
+      ],
+      "entry": "https://siam.in/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [
+          {
+            "click": "#form1 > header > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > a:nth-of-type(2)",
+            "optional": true
+          },
+          {
+            "click": "#form1 > header > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > a:nth-of-type(2)",
+            "optional": true
+          },
+          {
+            "click": "#form1 > header > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1) > a:nth-of-type(2)",
+            "optional": true
+          },
+          {
+            "click": "#form1 > main > section:nth-of-type(1) > div > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(3) > a",
+            "optional": false,
+            "navigates": true
+          }
+        ],
+        "container": "#Leftmenu1_divleft > ul",
+        "item": "li",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
       "id": "auto-stackoverflow.com",
       "name": "stackoverflow.com",
       "aliases": [
@@ -1624,6 +1799,73 @@
           "type": "none",
           "max_pages": 1
         }
+      }
+    },
+    {
+      "id": "auto-tatamotors.com",
+      "name": "tatamotors.com",
+      "aliases": [
+        "tatamotors.com"
+      ],
+      "domains": [
+        "tatamotors.com"
+      ],
+      "entry": "https://www.tatamotors.com/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [
+          {
+            "click": "#fancybox-container-1 > div:nth-of-type(2) > div:nth-of-type(4) > div > div > button",
+            "optional": true
+          },
+          {
+            "click": "#fancybox-container-1 > div:nth-of-type(2) > div:nth-of-type(4) > div > div > button",
+            "optional": true
+          },
+          {
+            "click": "#fancybox-container-1 > div:nth-of-type(2) > div:nth-of-type(4) > div > div > button",
+            "optional": true
+          }
+        ],
+        "container": "div:nth-of-type(1) > section:nth-of-type(9) > div > div:nth-of-type(2)",
+        "item": "div.col.col-xl-3",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-tatamotors.com-press-releases-tata-motors-launches-festival-of-cars-with-incredible-prices-for-its-cars-suvs",
+      "name": "tatamotors.com/press-releases/tata-motors-launches-festival-of-cars-with-incredible-prices-for-its-cars-suvs",
+      "aliases": [
+        "tatamotors.com/press-releases/tata-motors-launches-festival-of-cars-with-incredible-prices-for-its-cars-suvs"
+      ],
+      "domains": [
+        "tatamotors.com"
+      ],
+      "entry": "https://www.tatamotors.com/press-releases/tata-motors-launches-festival-of-cars-with-incredible-prices-for-its-cars-suvs/",
+      "auto": true,
+      "recipe": {
+        "kind": "table",
+        "ready_steps": [],
+        "table": "div > section:nth-of-type(2) > div > div:nth-of-type(4) > table",
+        "columns": {
+          "Car/SUV": "car_suv",
+          "New Entry Price (Limited Period Offer) ₹": "new_entry_price_limited_period_offer",
+          "Price Reduction (upto) (Variant-dependent)* ₹": "price_reduction_upto_variant_dependent"
+        },
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        },
+        "links": {},
+        "id_source": "column",
+        "id_field": "new_entry_price_limited_period_offer",
+        "id_pattern": "^\\d+,\\d{2},\\d{3}$"
       }
     },
     {
