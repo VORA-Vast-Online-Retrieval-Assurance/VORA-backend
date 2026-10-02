@@ -51,7 +51,16 @@ def main() -> int:
     from huggingface_hub import HfApi
 
     api = HfApi(token=token)
-    user = api.whoami()["name"]
+    try:
+        user = api.whoami()["name"]
+    except Exception as exc:  # noqa: BLE001
+        if "401" in str(exc) or "Invalid user token" in str(exc):
+            print("Hugging Face rejected the token (401). Check that:")
+            print("  - you pasted the real token (it starts with hf_), not the placeholder, with no spaces or extra quotes;")
+            print("  - it is a classic 'Write' token (or a fine-grained one that may create repos and Spaces);")
+            print("  - it was not deleted or regenerated (a token is shown only once: make a new one if unsure).")
+            return 2
+        raise
     print(f"signed in as {user}")
 
     dataset_id, space_id = f"{user}/{args.dataset}", f"{user}/{args.space}"
