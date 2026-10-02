@@ -1,0 +1,59 @@
+{
+  "blacklisted": [
+    {
+      "host": "164.100.213.102",
+      "reason": "HTTP 404",
+      "listed_at": "2026-10-02T12:25:22.150739+00:00"
+    },
+    {
+      "host": "api.crunchyroll.com",
+      "reason": "HTTP 404",
+      "listed_at": "2026-10-01T22:30:55.705066+00:00"
+    },
+    {
+      "host": "autosinnovate.org",
+      "reason": "HTTP 404",
+      "listed_at": "2026-10-01T22:30:56.731905+00:00"
+    },
+    {
+      "host": "bidplus.gem.gov.in",
+      "reason": "ConnectTimeout",
+      "listed_at": "2026-10-02T12:25:45.871676+00:00"
+    },
+    {
+      "host": "blsmon1.bls.gov",
+      "reason": "ConnectTimeout",
+      "listed_at": "2026-10-02T07:04:54.219303+00:00"
+    },
+    {
+      "host": "cbr.com",
+      "reason": "RemoteProtocolError",
+      "listed_at": "2026-10-01T22:30:59.950668+00:00"
+    },
+    {
+      "host": "collider.com",
+      "reason": "RemoteProtocolError",
+      "listed_at": "2026-10-01T22:30:57.536967+00:00"
+    },
+    {
+      "host": "dualshockers.com",
+      "reason": "RemoteProtocolError",
+      "listed_at": "2026-10-02T10:50:48.266788+00:00"
+    },
+    {
+      "host": "e-amrit.niti.gov.in",
+      "reason": "ConnectTimeout",
+      "listed_at": "2026-10-02T10:51:14.159354+00:00"
+    },
+    {
+      "host": "rajyasabha.nic.in",
+      "reason": "ConnectTimeout",
+      "listed_at": "2026-10-01T22:32:38.019144+00:00"
+    },
+    {
+      "host": "screenrant.com",
+      "reason": "RemoteProtocolError",
+      "listed_at": "2026-10-01T22:30:57.600629+00:00"
+    }
+  ]
+}

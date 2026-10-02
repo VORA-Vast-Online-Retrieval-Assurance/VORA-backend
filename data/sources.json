@@ -1,0 +1,1656 @@
+{
+  "sources": [
+    {
+      "id": "auto-afdc.energy.gov",
+      "name": "afdc.energy.gov",
+      "aliases": [
+        "afdc.energy.gov"
+      ],
+      "domains": [
+        "afdc.energy.gov"
+      ],
+      "entry": "https://afdc.energy.gov/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#home-page > section:nth-of-type(3) > div",
+        "item": "div.col-10.col-sm-8.col-md-6.col-lg-4",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-animenewsnetwork.com",
+      "name": "animenewsnetwork.com",
+      "aliases": [
+        "animenewsnetwork.com"
+      ],
+      "domains": [
+        "animenewsnetwork.com"
+      ],
+      "entry": "https://animenewsnetwork.com/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#mainfeed > div:nth-of-type(6) > div",
+        "item": "div.herald.box.news.t-news",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-animenewsnetwork.com-encyclopedia-anime-episodes-latest",
+      "name": "animenewsnetwork.com/encyclopedia/anime/episodes/latest",
+      "aliases": [
+        "animenewsnetwork.com/encyclopedia/anime/episodes/latest"
+      ],
+      "domains": [
+        "animenewsnetwork.com"
+      ],
+      "entry": "https://www.animenewsnetwork.com/encyclopedia/anime/episodes/latest",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#content-zone > div > table",
+        "item": "tr",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-animenewsnetwork.com-encyclopedia-ratings-anime.php",
+      "name": "animenewsnetwork.com/encyclopedia/ratings-anime.php",
+      "aliases": [
+        "animenewsnetwork.com/encyclopedia/ratings-anime.php"
+      ],
+      "domains": [
+        "animenewsnetwork.com"
+      ],
+      "entry": "https://www.animenewsnetwork.com/encyclopedia/ratings-anime.php",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#content-zone > div > table:nth-of-type(6)",
+        "item": "tr",
+        "id_field": "id",
+        "id_params": [
+          "id"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-animenewsnetwork.com-feature-2025-01-22-the-state-of-isekai-anime-.219776",
+      "name": "animenewsnetwork.com/feature/2025-01-22/the-state-of-isekai-anime/.219776",
+      "aliases": [
+        "animenewsnetwork.com/feature/2025-01-22/the-state-of-isekai-anime/.219776"
+      ],
+      "domains": [
+        "animenewsnetwork.com"
+      ],
+      "entry": "https://www.animenewsnetwork.com/feature/2025-01-22/the-state-of-isekai-anime/.219776",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#content-zone > div > div:nth-of-type(1) > div",
+        "item": "p",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-animenewsnetwork.com-watch-2026-09-25-the-fall-2026-anime-trailer-party-premieres-tonight-.242200",
+      "name": "animenewsnetwork.com/watch/2026-09-25/the-fall-2026-anime-trailer-party-premieres-tonight/.242200",
+      "aliases": [
+        "animenewsnetwork.com/watch/2026-09-25/the-fall-2026-anime-trailer-party-premieres-tonight/.242200"
+      ],
+      "domains": [
+        "animenewsnetwork.com"
+      ],
+      "entry": "https://www.animenewsnetwork.com/watch/2026-09-25/the-fall-2026-anime-trailer-party-premieres-tonight/.242200",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [
+          {
+            "click": "#content-zone > div > p > a:nth-of-type(2)",
+            "optional": false,
+            "navigates": true
+          }
+        ],
+        "container": "#content-zone > div > ul",
+        "item": "li",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-api.indiankanoon.org",
+      "name": "api.indiankanoon.org",
+      "aliases": [
+        "api.indiankanoon.org"
+      ],
+      "domains": [
+        "api.indiankanoon.org"
+      ],
+      "entry": "https://api.indiankanoon.org/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "div > ul",
+        "item": "li",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-auth.mygov.in",
+      "name": "auth.mygov.in",
+      "aliases": [
+        "auth.mygov.in"
+      ],
+      "domains": [
+        "auth.mygov.in"
+      ],
+      "entry": "https://auth.mygov.in/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#block-hybridauth-hybridauth > div > div > div:nth-of-type(3) > div > ol",
+        "item": "li",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-auth.mygov.in-user-login",
+      "name": "auth.mygov.in/user/login",
+      "aliases": [
+        "auth.mygov.in/user/login"
+      ],
+      "domains": [
+        "auth.mygov.in"
+      ],
+      "entry": "https://auth.mygov.in/user/login?destination",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#block-hybridauth-hybridauth > div > div",
+        "item": "div",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-bls.gov-cpi-factsheets-used-cars-and-trucks.htm",
+      "name": "bls.gov/cpi/factsheets/used-cars-and-trucks.htm",
+      "aliases": [
+        "bls.gov/cpi/factsheets/used-cars-and-trucks.htm"
+      ],
+      "domains": [
+        "bls.gov"
+      ],
+      "entry": "https://www.bls.gov/cpi/factsheets/used-cars-and-trucks.htm",
+      "auto": true,
+      "recipe": {
+        "kind": "table",
+        "ready_steps": [],
+        "table": "#Relative-Importance-Tables\\.xlsx",
+        "columns": {
+          "Item": "item",
+          "Relative importance": "relative_importance"
+        },
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        },
+        "links": {},
+        "id_source": "column",
+        "id_field": "relative_importance",
+        "id_pattern": "^\\d+\\.\\d+$"
+      }
+    },
+    {
+      "id": "auto-boxofficemojo.com",
+      "name": "boxofficemojo.com",
+      "aliases": [
+        "boxofficemojo.com"
+      ],
+      "domains": [
+        "boxofficemojo.com"
+      ],
+      "entry": "https://boxofficemojo.com/",
+      "auto": true,
+      "recipe": {
+        "kind": "table",
+        "ready_steps": [],
+        "table": "#a-page > main > div > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) > div > div > table",
+        "columns": {
+          "Avengers Endgame: Encore 2026 Re-release": "avengers_endgame_encore_2026_re_release",
+          "$26.1M": "26_1m",
+          "true": "true",
+          "false": "false"
+        },
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        },
+        "links": {},
+        "id_source": "param",
+        "id_field": "row_id",
+        "id_pattern": ".+",
+        "id_name": "path"
+      }
+    },
+    {
+      "id": "auto-cardekho.com",
+      "name": "cardekho.com",
+      "aliases": [
+        "cardekho.com"
+      ],
+      "domains": [
+        "cardekho.com"
+      ],
+      "entry": "https://www.cardekho.com/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#carStory_0",
+        "item": "li",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-carwale.com",
+      "name": "carwale.com",
+      "aliases": [
+        "carwale.com"
+      ],
+      "domains": [
+        "carwale.com"
+      ],
+      "entry": "https://www.carwale.com/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [
+          {
+            "click": "#global-container > div:nth-of-type(1) > div:nth-of-type(4) > section:nth-of-type(2) > div > div > div:nth-of-type(2)",
+            "optional": false,
+            "navigates": false
+          }
+        ],
+        "container": "#global-container > div:nth-of-type(1) > div:nth-of-type(4) > div:nth-of-type(3) > section > div > div > div:nth-of-type(2) > div:nth-of-type(1) > div > div > div:nth-of-type(1) > div:nth-of-type(1) > div > div",
+        "item": "div",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-carwale.com-mahindra-cars",
+      "name": "carwale.com/mahindra-cars",
+      "aliases": [
+        "carwale.com/mahindra-cars"
+      ],
+      "domains": [
+        "carwale.com"
+      ],
+      "entry": "https://www.carwale.com/mahindra-cars/",
+      "auto": true,
+      "recipe": {
+        "kind": "table",
+        "ready_steps": [],
+        "table": "#global-container > div:nth-of-type(1) > div > div > div:nth-of-type(2) > section > div > div > div:nth-of-type(1) > div > div:nth-of-type(3) > div:nth-of-type(2) > div > table",
+        "columns": {
+          "MODEL": "model",
+          "PRICE": "price"
+        },
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        },
+        "links": {},
+        "id_source": "column",
+        "id_field": "price",
+        "id_pattern": "^[A-Za-z]{2}\\.\\ \\d+\\.\\d{2}\\ [A-Za-z]{4}$"
+      }
+    },
+    {
+      "id": "auto-carwale.com-new-cars",
+      "name": "carwale.com/new-cars",
+      "aliases": [
+        "carwale.com/new-cars"
+      ],
+      "domains": [
+        "carwale.com"
+      ],
+      "entry": "https://www.carwale.com/new-cars/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#global-container > div:nth-of-type(1) > div > div:nth-of-type(7) > section > div > div > div:nth-of-type(1) > div > div",
+        "item": "div",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-crunchyroll.com",
+      "name": "crunchyroll.com",
+      "aliases": [
+        "crunchyroll.com"
+      ],
+      "domains": [
+        "crunchyroll.com"
+      ],
+      "entry": "https://crunchyroll.com/",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://cdn.cookielaw.org/consent/9470b86f-5b87-4646-a4f7-2f2916b2a883/019f8f40-fdcc-7efc-b749-5fed8ae60bc3/en-in.json",
+        "records_path": [
+          "DomainData",
+          "Groups"
+        ],
+        "id_fields": [
+          "OptanonGroupId"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-crunchyroll.com-hi-news-features-2020-2-22-the-most-popular-anime-in-2020according-to-wikipedia",
+      "name": "crunchyroll.com/hi/news/features/2020/2/22/the-most-popular-anime-in-2020according-to-wikipedia",
+      "aliases": [
+        "crunchyroll.com/hi/news/features/2020/2/22/the-most-popular-anime-in-2020according-to-wikipedia"
+      ],
+      "domains": [
+        "crunchyroll.com"
+      ],
+      "entry": "https://www.crunchyroll.com/hi/news/features/2020/2/22/the-most-popular-anime-in-2020according-to-wikipedia",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#app > div:nth-of-type(2) > div > div > div > main > div:nth-of-type(2)",
+        "item": "div.article-panel-margin-top-normal.article-panel-margin-bottom-normal",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-crunchyroll.com-news-features-2020-2-22-the-most-popular-anime-in-2020according-to-wikipedia",
+      "name": "crunchyroll.com/news/features/2020/2/22/the-most-popular-anime-in-2020according-to-wikipedia",
+      "aliases": [
+        "crunchyroll.com/news/features/2020/2/22/the-most-popular-anime-in-2020according-to-wikipedia"
+      ],
+      "domains": [
+        "crunchyroll.com"
+      ],
+      "entry": "https://www.crunchyroll.com/news/features/2020/2/22/the-most-popular-anime-in-2020according-to-wikipedia",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#app > div:nth-of-type(2) > div > div > div > main > div:nth-of-type(2)",
+        "item": "div.article-panel-margin-top-normal.article-panel-margin-bottom-normal",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-dspstg.sansad.in-ls-debates-digitized",
+      "name": "dspstg.sansad.in/ls/debates/digitized",
+      "aliases": [
+        "dspstg.sansad.in/ls/debates/digitized"
+      ],
+      "domains": [
+        "dspstg.sansad.in"
+      ],
+      "entry": "https://dspstg.sansad.in/ls/debates/digitized",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://elibrary.sansad.in/server/api/discover/facets/loksabhanumber?scope=03c67f26-e547-4c6f-914d-e4b443281a8c&page=0&size=100",
+        "records_path": [
+          "_embedded",
+          "values"
+        ],
+        "id_fields": [
+          "count"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 50
+        },
+        "page_param": "page",
+        "page_start": 0,
+        "page_offset": false,
+        "size_param": "size",
+        "api_size": 100
+      }
+    },
+    {
+      "id": "auto-egazette.gov.in",
+      "name": "egazette.gov.in",
+      "aliases": [
+        "egazette.gov.in"
+      ],
+      "domains": [
+        "egazette.gov.in"
+      ],
+      "entry": "https://egazette.gov.in/",
+      "auto": true,
+      "recipe": {
+        "kind": "table",
+        "ready_steps": [
+          {
+            "click": "#Div_ImageScroller > div:nth-of-type(1) > a",
+            "optional": true
+          },
+          {
+            "click": "#lnk_Extra_All",
+            "optional": false,
+            "navigates": true
+          }
+        ],
+        "table": "#gvGazetteList",
+        "columns": {
+          "Ministry / Organization": "ministry",
+          "Department": "department",
+          "Office": "office",
+          "Subject": "subject",
+          "Part & Section": "part_section",
+          "Issue Date": "issue_date",
+          "Publish Date": "publish_date",
+          "Gazette ID": "gazette_id",
+          "Download": "download"
+        },
+        "pagination": {
+          "type": "postback",
+          "pattern": "Page$",
+          "max_pages": 5
+        },
+        "links": {
+          "pdf_url": {
+            "from": "gazette_id",
+            "pattern": "^[A-Z]{2}\\-[A-Z]{2}\\-[A-Z]{1}\\-\\d{4}(\\d{4})\\-(\\d+)$",
+            "template": "https://egazette.gov.in/WriteReadData/{1}/{2}.pdf"
+          }
+        },
+        "id_source": "column",
+        "id_field": "gazette_id",
+        "id_pattern": "^[A-Z]{2}\\-[A-Z]{2}\\-[A-Z]{1}\\-\\d{8}\\-\\d+$"
+      }
+    },
+    {
+      "id": "auto-egazette.gov.in-default.aspx",
+      "name": "egazette.gov.in/default.aspx",
+      "aliases": [
+        "egazette.gov.in/default.aspx"
+      ],
+      "domains": [
+        "egazette.gov.in"
+      ],
+      "entry": "https://egazette.gov.in/(S(vpyc2vmmb3fw2bn2anhspsdr))/default.aspx",
+      "auto": true,
+      "recipe": {
+        "kind": "table",
+        "ready_steps": [
+          {
+            "click": "#Div_ImageScroller > div:nth-of-type(1) > a",
+            "optional": true
+          },
+          {
+            "click": "#lnk_Extra_All",
+            "optional": false,
+            "navigates": true
+          }
+        ],
+        "table": "#gvGazetteList",
+        "columns": {
+          "Ministry / Organization": "ministry",
+          "Department": "department",
+          "Office": "office",
+          "Subject": "subject",
+          "Part & Section": "part_section",
+          "Issue Date": "issue_date",
+          "Publish Date": "publish_date",
+          "Gazette ID": "gazette_id",
+          "Download": "download"
+        },
+        "pagination": {
+          "type": "postback",
+          "pattern": "Page$",
+          "max_pages": 5
+        },
+        "links": {
+          "pdf_url": {
+            "from": "gazette_id",
+            "pattern": "^[A-Z]{2}\\-[A-Z]{2}\\-[A-Z]{1}\\-\\d{4}(\\d{4})\\-(\\d+)$",
+            "template": "https://egazette.gov.in/WriteReadData/{1}/{2}.pdf"
+          }
+        },
+        "id_source": "column",
+        "id_field": "gazette_id",
+        "id_pattern": "^[A-Z]{2}\\-[A-Z]{2}\\-[A-Z]{1}\\-\\d{8}\\-\\d+$"
+      }
+    },
+    {
+      "id": "auto-eia.gov",
+      "name": "eia.gov",
+      "aliases": [
+        "eia.gov"
+      ],
+      "domains": [
+        "eia.gov"
+      ],
+      "entry": "https://eia.gov/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#top > div:nth-of-type(2) > div > div:nth-of-type(3) > div:nth-of-type(2) > ul:nth-of-type(2)",
+        "item": "li",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-eia.gov-todayinenergy-detail.php",
+      "name": "eia.gov/todayinenergy/detail.php",
+      "aliases": [
+        "eia.gov/todayinenergy/detail.php"
+      ],
+      "domains": [
+        "eia.gov"
+      ],
+      "entry": "https://www.eia.gov/todayinenergy/detail.php?id=56480",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [
+          {
+            "click": "#page-sub-nav > div:nth-of-type(1) > ul > li:nth-of-type(4) > a",
+            "optional": false,
+            "navigates": true
+          }
+        ],
+        "container": "#page-sub-nav > div:nth-of-type(1) > ul",
+        "item": "li",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-funimation.com",
+      "name": "funimation.com",
+      "aliases": [
+        "funimation.com"
+      ],
+      "domains": [
+        "funimation.com"
+      ],
+      "entry": "https://funimation.com/",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://cdn.cookielaw.org/consent/9470b86f-5b87-4646-a4f7-2f2916b2a883/019f8f40-fdcc-7efc-b749-5fed8ae60bc3/en-in.json",
+        "records_path": [
+          "DomainData",
+          "Groups"
+        ],
+        "id_fields": [
+          "OptanonGroupId"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-glassdoor.co.in-job-listing-angularjs-developer-stw-services-jv-ko0-19-ke20-32.htm",
+      "name": "glassdoor.co.in/job-listing/angularjs-developer-stw-services-jv_ko0,19_ke20,32.htm",
+      "aliases": [
+        "glassdoor.co.in/job-listing/angularjs-developer-stw-services-jv_ko0,19_ke20,32.htm"
+      ],
+      "domains": [
+        "glassdoor.co.in"
+      ],
+      "entry": "https://www.glassdoor.co.in/job-listing/angularjs-developer-stw-services-JV_KO0,19_KE20,32.htm?jl=1009795446775",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://cdn.cookielaw.org/consent/394c04f2-018c-43ca-a917-394e58da90b7/018eaa4f-9e18-7ec8-9767-89220d5fb8b6/en.json",
+        "records_path": [
+          "DomainData",
+          "Groups"
+        ],
+        "id_fields": [
+          "OptanonGroupId"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-glassdoor.co.in-job-listing-asp-net-developer-cdat-pune-jv-ic2856202-ko0-17-ke18-27.htm",
+      "name": "glassdoor.co.in/job-listing/asp-net-developer-cdat-pune-jv_ic2856202_ko0,17_ke18,27.htm",
+      "aliases": [
+        "glassdoor.co.in/job-listing/asp-net-developer-cdat-pune-jv_ic2856202_ko0,17_ke18,27.htm"
+      ],
+      "domains": [
+        "glassdoor.co.in"
+      ],
+      "entry": "https://www.glassdoor.co.in/job-listing/asp-net-developer-cdat-pune-JV_IC2856202_KO0,17_KE18,27.htm?jl=1010161349511",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://cdn.cookielaw.org/consent/394c04f2-018c-43ca-a917-394e58da90b7/018eaa4f-9e18-7ec8-9767-89220d5fb8b6/en.json",
+        "records_path": [
+          "DomainData",
+          "Groups"
+        ],
+        "id_fields": [
+          "OptanonGroupId"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-glassdoor.co.in-job-listing-front-end-developer-etechno-lab-jv-ic2856202-ko0-19-ke20-31.htm",
+      "name": "glassdoor.co.in/job-listing/front-end-developer-etechno-lab-jv_ic2856202_ko0,19_ke20,31.htm",
+      "aliases": [
+        "glassdoor.co.in/job-listing/front-end-developer-etechno-lab-jv_ic2856202_ko0,19_ke20,31.htm"
+      ],
+      "domains": [
+        "glassdoor.co.in"
+      ],
+      "entry": "https://www.glassdoor.co.in/job-listing/front-end-developer-etechno-lab-JV_IC2856202_KO0,19_KE20,31.htm?jl=1006117265482",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://cdn.cookielaw.org/consent/394c04f2-018c-43ca-a917-394e58da90b7/018eaa4f-9e18-7ec8-9767-89220d5fb8b6/en.json",
+        "records_path": [
+          "DomainData",
+          "Groups"
+        ],
+        "id_fields": [
+          "OptanonGroupId"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-glassdoor.co.in-job-listing-ios-android-developer-logicowise-systems-jv-ko0-21-ke22-40.htm",
+      "name": "glassdoor.co.in/job-listing/ios-android-developer-logicowise-systems-jv_ko0,21_ke22,40.htm",
+      "aliases": [
+        "glassdoor.co.in/job-listing/ios-android-developer-logicowise-systems-jv_ko0,21_ke22,40.htm"
+      ],
+      "domains": [
+        "glassdoor.co.in"
+      ],
+      "entry": "https://www.glassdoor.co.in/job-listing/ios-android-developer-logicowise-systems-JV_KO0,21_KE22,40.htm?jl=1007961499396",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://cdn.cookielaw.org/consent/394c04f2-018c-43ca-a917-394e58da90b7/018eaa4f-9e18-7ec8-9767-89220d5fb8b6/en.json",
+        "records_path": [
+          "DomainData",
+          "Groups"
+        ],
+        "id_fields": [
+          "OptanonGroupId"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-glassdoor.com",
+      "name": "glassdoor.com",
+      "aliases": [
+        "glassdoor.com"
+      ],
+      "domains": [
+        "glassdoor.com"
+      ],
+      "entry": "https://glassdoor.com/",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://cdn.cookielaw.org/consent/394c04f2-018c-43ca-a917-394e58da90b7/018eaa4f-9e18-7ec8-9767-89220d5fb8b6/en.json",
+        "records_path": [
+          "DomainData",
+          "Groups"
+        ],
+        "id_fields": [
+          "OptanonGroupId"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-glassdoor.com-job-india-software-developer-fresher-jobs-srch-il.0-5-in115-ko6-32.htm",
+      "name": "glassdoor.com/job/india-software-developer-fresher-jobs-srch_il.0,5_in115_ko6,32.htm",
+      "aliases": [
+        "glassdoor.com/job/india-software-developer-fresher-jobs-srch_il.0,5_in115_ko6,32.htm"
+      ],
+      "domains": [
+        "glassdoor.com"
+      ],
+      "entry": "https://www.glassdoor.com/Job/india-software-developer-fresher-jobs-SRCH_IL.0,5_IN115_KO6,32.htm",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://cdn.cookielaw.org/consent/394c04f2-018c-43ca-a917-394e58da90b7/018eaa4f-9e18-7ec8-9767-89220d5fb8b6/en.json",
+        "records_path": [
+          "DomainData",
+          "Groups"
+        ],
+        "id_fields": [
+          "OptanonGroupId"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-glassdoor.com-job-pune-fresher-software-engineer-jobs-srch-il.0-4-ic2856202-ko5-30.htm",
+      "name": "glassdoor.com/job/pune-fresher-software-engineer-jobs-srch_il.0,4_ic2856202_ko5,30.htm",
+      "aliases": [
+        "glassdoor.com/job/pune-fresher-software-engineer-jobs-srch_il.0,4_ic2856202_ko5,30.htm"
+      ],
+      "domains": [
+        "glassdoor.com"
+      ],
+      "entry": "https://www.glassdoor.com/Job/pune-fresher-software-engineer-jobs-SRCH_IL.0,4_IC2856202_KO5,30.htm",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://cdn.cookielaw.org/consent/394c04f2-018c-43ca-a917-394e58da90b7/018eaa4f-9e18-7ec8-9767-89220d5fb8b6/en.json",
+        "records_path": [
+          "DomainData",
+          "Groups"
+        ],
+        "id_fields": [
+          "OptanonGroupId"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-glassdoor.com-job-pune-freshers-it-jobs-jobs-srch-il.0-4-ic2856202-ko5-21.htm",
+      "name": "glassdoor.com/job/pune-freshers-it-jobs-jobs-srch_il.0,4_ic2856202_ko5,21.htm",
+      "aliases": [
+        "glassdoor.com/job/pune-freshers-it-jobs-jobs-srch_il.0,4_ic2856202_ko5,21.htm"
+      ],
+      "domains": [
+        "glassdoor.com"
+      ],
+      "entry": "https://www.glassdoor.com/Job/pune-freshers-it-jobs-jobs-SRCH_IL.0,4_IC2856202_KO5,21.htm",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://cdn.cookielaw.org/consent/394c04f2-018c-43ca-a917-394e58da90b7/018eaa4f-9e18-7ec8-9767-89220d5fb8b6/en.json",
+        "records_path": [
+          "DomainData",
+          "Groups"
+        ],
+        "id_fields": [
+          "OptanonGroupId"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-help.edmunds.com-hc-en-us-articles-360021151674-does-edmunds-provide-historical-used-car-values-i-e-the-value-of-a-car-on-a-specific-date-in-the-past",
+      "name": "help.edmunds.com/hc/en-us/articles/360021151674-does-edmunds-provide-historical-used-car-values-i-e-the-value-of-a-car-on-a-specific-date-in-the-past",
+      "aliases": [
+        "help.edmunds.com/hc/en-us/articles/360021151674-does-edmunds-provide-historical-used-car-values-i-e-the-value-of-a-car-on-a-specific-date-in-the-past"
+      ],
+      "domains": [
+        "help.edmunds.com"
+      ],
+      "entry": "https://help.edmunds.com/hc/en-us/articles/360021151674-Does-Edmunds-provide-historical-used-car-values-i-e-the-value-of-a-car-on-a-specific-date-in-the-past",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [
+          {
+            "click": "#main-content > div > div:nth-of-type(2) > div > div:nth-of-type(4) > section > a",
+            "optional": false,
+            "navigates": true
+          }
+        ],
+        "container": "#main-content > section > div > ul",
+        "item": "li.article-list__item",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-iea.org",
+      "name": "iea.org",
+      "aliases": [
+        "iea.org"
+      ],
+      "domains": [
+        "iea.org"
+      ],
+      "entry": "https://iea.org/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [
+          {
+            "click": "#content > section > div > div > div:nth-of-type(2) > header > a",
+            "optional": false,
+            "navigates": true
+          }
+        ],
+        "container": "#content > div:nth-of-type(1) > div > div > div > div > div > div",
+        "item": "div.m-slider__item",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-iea.org-reports-global-ev-outlook-2026-trends-in-electric-cars",
+      "name": "iea.org/reports/global-ev-outlook-2026/trends-in-electric-cars",
+      "aliases": [
+        "iea.org/reports/global-ev-outlook-2026/trends-in-electric-cars"
+      ],
+      "domains": [
+        "iea.org"
+      ],
+      "entry": "https://www.iea.org/reports/global-ev-outlook-2026/trends-in-electric-cars",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [
+          {
+            "click": "#content > div:nth-of-type(2) > header > button",
+            "optional": true
+          },
+          {
+            "click": "#content > div:nth-of-type(2) > header > button",
+            "optional": true
+          },
+          {
+            "click": "#content > div:nth-of-type(2) > header > button",
+            "optional": true
+          }
+        ],
+        "container": "#content > div:nth-of-type(6) > div:nth-of-type(7) > div > div:nth-of-type(2)",
+        "item": "p",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-imdb.com",
+      "name": "imdb.com",
+      "aliases": [
+        "imdb.com"
+      ],
+      "domains": [
+        "imdb.com"
+      ],
+      "entry": "https://imdb.com/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#__next > main > div > div:nth-of-type(3) > div:nth-of-type(1) > div > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) > div > div",
+        "item": "div.sc-74a1e67f-4.hVvuwa",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-imdb.com-list-ls033398199",
+      "name": "imdb.com/list/ls033398199",
+      "aliases": [
+        "imdb.com/list/ls033398199"
+      ],
+      "domains": [
+        "imdb.com"
+      ],
+      "entry": "https://www.imdb.com/list/ls033398199/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#__next > main > div > section > div > section > div > div:nth-of-type(1) > section > div:nth-of-type(2) > ul",
+        "item": "li.ipc-metadata-list-summary-item",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-imdb.com-name-nm1210942",
+      "name": "imdb.com/name/nm1210942",
+      "aliases": [
+        "imdb.com/name/nm1210942"
+      ],
+      "domains": [
+        "imdb.com"
+      ],
+      "entry": "https://www.imdb.com/name/nm1210942/?ref_=ls_li_1_1",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#accordion-item-amzn1\\.imdb\\.concept\\.name_credit_category\\.c84ecaff-add5-4f2e-81db-102a41881fe3-Previous > div > ul",
+        "item": "li.ipc-metadata-list-summary-item.ipc-metadata-list-summary-item--click.sc-93f89e45-2.fnelrM",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-in.linkedin.com-jobs-.net-software-developer-28night-shifts-29-jobs",
+      "name": "in.linkedin.com/jobs/.net-software-developer-%28night-shifts%29-jobs",
+      "aliases": [
+        "in.linkedin.com/jobs/.net-software-developer-%28night-shifts%29-jobs"
+      ],
+      "domains": [
+        "in.linkedin.com"
+      ],
+      "entry": "https://in.linkedin.com/jobs/.net-software-developer-%28night-shifts%29-jobs",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [
+          {
+            "click": "#base-contextual-sign-in-modal > div > section > button",
+            "optional": true
+          }
+        ],
+        "container": "#main-content > section:nth-of-type(2) > ul",
+        "item": "li",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-in.linkedin.com-jobs-net-developer-28night-shift-29-jobs",
+      "name": "in.linkedin.com/jobs/net-developer-%28night-shift%29-jobs",
+      "aliases": [
+        "in.linkedin.com/jobs/net-developer-%28night-shift%29-jobs"
+      ],
+      "domains": [
+        "in.linkedin.com"
+      ],
+      "entry": "https://in.linkedin.com/jobs/net-developer-%28night-shift%29-jobs",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [
+          {
+            "click": "#base-contextual-sign-in-modal > div > section > button",
+            "optional": true
+          }
+        ],
+        "container": "#main-content > section:nth-of-type(2) > ul",
+        "item": "li",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-in.linkedin.com-jobs-software-engineer-jobs",
+      "name": "in.linkedin.com/jobs/software-engineer-jobs",
+      "aliases": [
+        "in.linkedin.com/jobs/software-engineer-jobs"
+      ],
+      "domains": [
+        "in.linkedin.com"
+      ],
+      "entry": "https://in.linkedin.com/jobs/software-engineer-jobs",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [
+          {
+            "click": "#base-contextual-sign-in-modal > div > section > button",
+            "optional": true
+          }
+        ],
+        "container": "#main-content > section:nth-of-type(2) > ul",
+        "item": "li",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-indeed.com",
+      "name": "indeed.com",
+      "aliases": [
+        "indeed.com"
+      ],
+      "domains": [
+        "indeed.com"
+      ],
+      "entry": "https://indeed.com/",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://d3fw5vlhllyvee.cloudfront.net/one-trust/dist/60b39f80e5b7a0ca17ce5e8519c552e0/indeed/consent/0d4d9047-e9bb-46ba-b003-a0bd1f4a7d4f/019ffbf0-b169-76d4-aac5-28177d3321aa/en.json",
+        "records_path": [
+          "DomainData",
+          "Groups"
+        ],
+        "id_fields": [
+          "OptanonGroupId"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-india.gov.in-category-jobs",
+      "name": "india.gov.in/category/jobs",
+      "aliases": [
+        "india.gov.in/category/jobs"
+      ],
+      "domains": [
+        "india.gov.in"
+      ],
+      "entry": "https://www.india.gov.in/category/jobs",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [
+          {
+            "click": "#viewAllButton",
+            "optional": false,
+            "navigates": false
+          }
+        ],
+        "container": "#serviceList",
+        "item": "li",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-linkedin.com",
+      "name": "linkedin.com",
+      "aliases": [
+        "linkedin.com"
+      ],
+      "domains": [
+        "linkedin.com"
+      ],
+      "entry": "https://linkedin.com/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [
+          {
+            "click": "#main-content > section:nth-of-type(2) > div:nth-of-type(2) > ul > li:nth-of-type(10) > a",
+            "optional": false,
+            "navigates": true
+          }
+        ],
+        "container": "#main-content > div > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2)",
+        "item": "div.topic-category.flex.flex-col.font-semibold.items-start.gap-y-4.rounded-lg.\\!bg-white.p-4.\\!w-\\[250px\\].h-\\[208px\\].hover\\:cursor-pointer",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-loksabha.neva.gov.in-debates",
+      "name": "loksabha.neva.gov.in/debates",
+      "aliases": [
+        "loksabha.neva.gov.in/debates"
+      ],
+      "domains": [
+        "loksabha.neva.gov.in"
+      ],
+      "entry": "https://loksabha.neva.gov.in/Debates",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#tabAssembly > div",
+        "item": "div.col-lg-2.col-md-3.col-sm-4.col-6.item",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-loksabha.neva.gov.in-notice-index-loksabha",
+      "name": "loksabha.neva.gov.in/notice/index/loksabha",
+      "aliases": [
+        "loksabha.neva.gov.in/notice/index/loksabha"
+      ],
+      "domains": [
+        "loksabha.neva.gov.in"
+      ],
+      "entry": "https://loksabha.neva.gov.in/Notice/Index/LokSabha",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "div:nth-of-type(1) > ul",
+        "item": "li",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-maharashtra.gov.in",
+      "name": "maharashtra.gov.in",
+      "aliases": [
+        "maharashtra.gov.in"
+      ],
+      "domains": [
+        "maharashtra.gov.in"
+      ],
+      "entry": "https://maharashtra.gov.in/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#textToSpeak > section:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div",
+        "item": "div.person.flex-fill.border-0.w-100",
+        "id_field": "id",
+        "id_params": [
+          "path"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-mygov.in",
+      "name": "mygov.in",
+      "aliases": [
+        "mygov.in"
+      ],
+      "domains": [
+        "mygov.in"
+      ],
+      "entry": "https://mygov.in/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [
+          {
+            "click": "#do-tab > div > div:nth-of-type(3) > a:nth-of-type(1)",
+            "optional": false,
+            "navigates": false
+          },
+          {
+            "click": "#do-tab > div > div:nth-of-type(3) > a:nth-of-type(2)",
+            "optional": false,
+            "navigates": true
+          },
+          {
+            "click": "div > footer > div:nth-of-type(1) > div > div:nth-of-type(2) > div > div > div:nth-of-type(1) > div > a:nth-of-type(12)",
+            "optional": false,
+            "navigates": false
+          }
+        ],
+        "container": "div > div:nth-of-type(4) > div > div > div > div > div:nth-of-type(3) > div:nth-of-type(5)",
+        "item": "div.content-item.open",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-prsindia.org",
+      "name": "prsindia.org",
+      "aliases": [
+        "prsindia.org"
+      ],
+      "domains": [
+        "prsindia.org"
+      ],
+      "entry": "https://prsindia.org/",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#parliament > div > div:nth-of-type(2) > div > div:nth-of-type(2) > div > ol",
+        "item": "li.views-row",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-prsindia.org-billtrack-the-constitution-one-hundred-and-twenty-ninth-amendment-bill-2024",
+      "name": "prsindia.org/billtrack/the-constitution-one-hundred-and-twenty-ninth-amendment-bill-2024",
+      "aliases": [
+        "prsindia.org/billtrack/the-constitution-one-hundred-and-twenty-ninth-amendment-bill-2024"
+      ],
+      "domains": [
+        "prsindia.org"
+      ],
+      "entry": "https://prsindia.org/billtrack/the-constitution-one-hundred-and-twenty-ninth-amendment-bill-2024",
+      "auto": true,
+      "recipe": {
+        "kind": "table",
+        "ready_steps": [],
+        "table": "#block-system-main > article > div:nth-of-type(4) > div:nth-of-type(1) > div > div > div > table:nth-of-type(2) > tbody > tr > td:nth-of-type(1) > table",
+        "columns": {
+          "State": "state",
+          "Election year": "election_year",
+          "Voters (in crore)": "voters_in_crore",
+          "No. of Poll Days": "no_of_poll_days",
+          "Days between First and Last Poll Day": "days_between_first_and_last_poll_day"
+        },
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        },
+        "links": {},
+        "id_source": "column",
+        "id_field": "voters_in_crore",
+        "id_pattern": "^\\d{1}\\.\\d{2}$"
+      }
+    },
+    {
+      "id": "auto-prsindia.org-budgets-discussionpapers",
+      "name": "prsindia.org/budgets/discussionpapers",
+      "aliases": [
+        "prsindia.org/budgets/discussionpapers"
+      ],
+      "domains": [
+        "prsindia.org"
+      ],
+      "entry": "https://prsindia.org/budgets/discussionpapers",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#block-system-main > div",
+        "item": "div.view-content",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-prsindia.org-parliamenttrack-vital-stats",
+      "name": "prsindia.org/parliamenttrack/vital-stats",
+      "aliases": [
+        "prsindia.org/parliamenttrack/vital-stats"
+      ],
+      "domains": [
+        "prsindia.org"
+      ],
+      "entry": "https://prsindia.org/parliamenttrack/vital-stats",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#block-system-main > div > div",
+        "item": "div.views-row",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-prsindia.org-sessiontrack-monsoon-session-2026-vital-stats",
+      "name": "prsindia.org/sessiontrack/monsoon-session-2026/vital-stats",
+      "aliases": [
+        "prsindia.org/sessiontrack/monsoon-session-2026/vital-stats"
+      ],
+      "domains": [
+        "prsindia.org"
+      ],
+      "entry": "https://prsindia.org/sessiontrack/monsoon-session-2026/vital-stats",
+      "auto": true,
+      "recipe": {
+        "kind": "link_list",
+        "ready_steps": [],
+        "container": "#block-prs-resource-menu-parliament-state-assembly > div > ul",
+        "item": "li.leaf",
+        "id_field": "id",
+        "id_params": [],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-qaucr1.cardekho.com-used-car-valuation.htm",
+      "name": "qaucr1.cardekho.com/used-car-valuation.htm",
+      "aliases": [
+        "qaucr1.cardekho.com/used-car-valuation.htm"
+      ],
+      "domains": [
+        "qaucr1.cardekho.com"
+      ],
+      "entry": "https://qaucr1.cardekho.com/used-car-valuation.htm",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://api.connecto.io/getSegmentDefinitionsByProject?projectId=570de84a4f0d925f98343571&type=online",
+        "records_path": [],
+        "id_fields": [
+          "_id"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-sansad.in-ls",
+      "name": "sansad.in/ls",
+      "aliases": [
+        "sansad.in/ls"
+      ],
+      "domains": [
+        "sansad.in"
+      ],
+      "entry": "https://sansad.in/ls",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://sansad.in/api_ls/public/updates?locale=en&page=1&size=10",
+        "records_path": [
+          "records"
+        ],
+        "id_fields": [
+          "title"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 50
+        },
+        "page_param": "page",
+        "page_start": 1,
+        "page_offset": false,
+        "size_param": "size",
+        "api_size": 100,
+        "total_pages_path": [
+          "_metadata",
+          "totalPages"
+        ]
+      }
+    },
+    {
+      "id": "auto-sansad.in-ls-business-agenda",
+      "name": "sansad.in/ls/business/agenda",
+      "aliases": [
+        "sansad.in/ls/business/agenda"
+      ],
+      "domains": [
+        "sansad.in"
+      ],
+      "entry": "https://sansad.in/ls/business/agenda",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://sansad.in/ls/_next/data/d7IgzOhIktN0PrIpoJNea/en.json",
+        "records_path": [
+          "pageProps",
+          "usefulLinksData"
+        ],
+        "id_fields": [
+          "id"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-sansad.in-ls-debates-introduction",
+      "name": "sansad.in/ls/debates/introduction",
+      "aliases": [
+        "sansad.in/ls/debates/introduction"
+      ],
+      "domains": [
+        "sansad.in"
+      ],
+      "entry": "https://sansad.in/ls/debates/introduction",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://sansad.in/ls/_next/data/d7IgzOhIktN0PrIpoJNea/en.json",
+        "records_path": [
+          "pageProps",
+          "usefulLinksData"
+        ],
+        "id_fields": [
+          "id"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-stackoverflow.com",
+      "name": "stackoverflow.com",
+      "aliases": [
+        "stackoverflow.com"
+      ],
+      "domains": [
+        "stackoverflow.com"
+      ],
+      "entry": "https://stackoverflow.com/",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://cdn.cookielaw.org/consent/c3d9f1e3-55f3-4eba-b268-46cee4c6789c/c3d9f1e3-55f3-4eba-b268-46cee4c6789c.json",
+        "records_path": [
+          "RuleSet"
+        ],
+        "id_fields": [
+          "Id"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    },
+    {
+      "id": "auto-videolibrary.sansad.in",
+      "name": "videolibrary.sansad.in",
+      "aliases": [
+        "videolibrary.sansad.in"
+      ],
+      "domains": [
+        "videolibrary.sansad.in"
+      ],
+      "entry": "https://videolibrary.sansad.in/",
+      "auto": true,
+      "recipe": {
+        "kind": "json_api",
+        "api_url": "https://videolibrary.sansad.in/api/v1/app/leader-positions",
+        "records_path": [
+          "data"
+        ],
+        "id_fields": [
+          "id"
+        ],
+        "pagination": {
+          "type": "none",
+          "max_pages": 1
+        }
+      }
+    }
+  ]
+}

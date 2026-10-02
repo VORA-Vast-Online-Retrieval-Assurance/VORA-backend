@@ -1,0 +1,10 @@
+# Store text with LF line endings on every platform.
+* text=auto eol=lf
+
+# Windows scripts keep CRLF so PowerShell runs them unchanged.
+*.ps1 text eol=crlf
+
+*.pdf binary
+*.png binary
+*.jpg binary
+*.xlsx binary

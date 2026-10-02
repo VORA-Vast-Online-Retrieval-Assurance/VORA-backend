@@ -1,0 +1,17 @@
+# Never in the image: secrets, local environments, databases, caches, tests and docs.
+.env
+.env.*
+!.env.example
+.venv/
+.runtime/
+__pycache__/
+*.py[cod]
+*.db
+*.db-*
+*.log
+tests/
+docs/
+.github/
+.pytest_cache/
+.idea/
+.vscode/

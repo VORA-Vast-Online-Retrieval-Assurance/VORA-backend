@@ -1,0 +1,12 @@
+# SearXNG settings for VORA. The secret key comes from the environment (SEARXNG_SECRET), never from this file.
+use_default_settings: true
+general:
+  instance_name: "vora-search"
+server:
+  limiter: false
+  image_proxy: false
+search:
+  formats:
+    - html
+    - json
+  safe_search: 0

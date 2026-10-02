@@ -1,0 +1,44 @@
+# Local services.
+#   docker compose up -d                 SearXNG only, for running VORA with `python app.py` on this machine
+#   docker compose --profile app up -d   the full production image (VORA + its own SearXNG) on http://127.0.0.1:7860
+# SearXNG listens on 127.0.0.1:8080 only; a locally run VORA reads it through VORA_SEARXNG_URL=http://127.0.0.1:8080
+services:
+  searxng:
+    image: searxng/searxng:latest
+    container_name: vora-searxng
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      SEARXNG_SECRET: ${SEARXNG_SECRET:?set SEARXNG_SECRET in .env}
+      SEARXNG_BASE_URL: http://127.0.0.1:8080/
+    volumes:
+      - ./deploy/searxng/settings.yml:/etc/searxng/settings.yml:ro
+    cap_drop: [ALL]
+    cap_add: [CHOWN, SETGID, SETUID]
+    logging:
+      driver: json-file
+      options: {max-size: "1m", max-file: "1"}
+
+  vora:
+    profiles: [app]
+    build: .
+    image: vora:local
+    container_name: vora-app
+    ports:
+      - "127.0.0.1:7860:7860"
+    env_file: .env
+    environment:
+      # Inside the container these always win over the local .env values.
+      VORA_HOST: 0.0.0.0
+      VORA_PORT: "7860"
+      VORA_BROWSER_BINARY: ""
+      VORA_SEARXNG_URL: http://127.0.0.1:8080
+      DATABASE_PATH: /home/vora/state/vora.db
+    volumes:
+      - vora-state:/home/vora/state
+    shm_size: "1gb"
+    restart: unless-stopped
+
+volumes:
+  vora-state:

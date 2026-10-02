@@ -1,0 +1,5 @@
+{
+  "about": "Per-site outcomes of VORA research (one section per installation), used to rank sources. Regenerate your section with: python scripts/export_site_knowledge.py",
+  "generated_at": "2026-09-29T20:00:42+00:00",
+  "contributions": {}
+}

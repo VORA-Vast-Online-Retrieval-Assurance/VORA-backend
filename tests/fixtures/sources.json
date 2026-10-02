@@ -1,0 +1,30 @@
+{
+  "sources": [
+    {
+      "id": "egazette-india",
+      "name": "eGazette (Gazette of India)",
+      "aliases": ["egazette", "e-gazette", "e gazette", "egazette of india", "gazette of india", "egazette.gov.in",
+                  "egazette.com", "egazette.nic.in", "india gazette", "central gazette",
+                  "gazette notifications india", "government gazette india"],
+      "domains": ["egazette.gov.in", "egazette.nic.in"],
+      "entry": "https://egazette.gov.in/",
+      "record_type": "gazette notice",
+      "recipe": {
+        "ready_steps": [
+          {"click": "input[name='ImgMessage_OK']", "optional": true},
+          {"click": "a.cancel", "optional": true},
+          {"click_text": "View All", "optional": false, "navigates": true}
+        ],
+        "table": "#gvGazetteList",
+        "columns": {"Ministry / Organization": "ministry", "Department": "department", "Office": "office",
+                    "Subject": "subject", "Part & Section": "part_section", "Issue Date": "issue_date",
+                    "Publish Date": "publish_date", "Gazette ID": "gazette_id"},
+        "id_field": "gazette_id",
+        "id_pattern": "^[A-Z]{2}-[A-Z]{2}-[A-Z]-\\d{8}-\\d+$",
+        "pagination": {"type": "postback", "pattern": "Page$N", "max_pages": 5},
+        "links": {"pdf_url": {"from": "gazette_id", "pattern": "-\\d{4}(\\d{4})-(\\d+)$",
+                              "template": "https://egazette.gov.in/WriteReadData/{1}/{2}.pdf"}}
+      }
+    }
+  ]
+}
