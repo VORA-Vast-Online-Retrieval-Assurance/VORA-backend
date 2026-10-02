@@ -28,7 +28,7 @@ class BareHostTests(unittest.TestCase):
 class ResolveTests(unittest.TestCase):
     def setUp(self) -> None:
         # AppSettings is frozen: replace the module's reference to it
-        self.fake = type("S", (), {"groq_api_key": "k", "gemini_api_key": None, "nvidia_api_key": None,
+        self.fake = type("S", (), {"groq_api_key": "k", "gemini_api_key": None,
                                 "resolver_models": ("groq:m1", "groq:m2")})()
         patch.object(resolver, "settings", self.fake).start()
         self.addCleanup(patch.stopall)

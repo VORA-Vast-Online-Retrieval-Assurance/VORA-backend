@@ -40,14 +40,8 @@ class AppSettings:
     legacy_owner: str | None = os.getenv("VORA_LEGACY_OWNER") or None
     max_candidates: int = int(os.getenv("VORA_MAX_CANDIDATES", "40"))
     max_sources: int = int(os.getenv("VORA_MAX_SOURCES", "8"))
-    llm_model: str = os.getenv(
-        "LLM_MODEL", "openai/nvidia/nemotron-3.5-lightning-30b-a3b"
-    )
+    llm_model: str = os.getenv("LLM_MODEL", "groq/qwen/qwen3.8-27b")
     llm_fallback_model: str | None = os.getenv("LLM_FALLBACK_MODEL") or None
-    nvidia_api_key: str | None = os.getenv("NVIDIA_API_KEY") or None
-    nvidia_api_base: str = os.getenv(
-        "NVIDIA_API_BASE", "https://integrate.api.nvidia.com/v1"
-    )
     gemini_api_key: str | None = os.getenv("GEMINI_API_KEY") or None
     gemini_model: str = os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
     llm_timeout_seconds: int = int(os.getenv("LLM_TIMEOUT_SECONDS", "45"))
@@ -72,6 +66,11 @@ class AppSettings:
     search_api: str | None = os.getenv("VORA_SEARCH_API") or None
     search_api_key: str | None = os.getenv("VORA_SEARCH_API_KEY") or None
     search_api_cx: str | None = os.getenv("VORA_SEARCH_API_CX") or None
+    # Which search sources are tried, in this order, until one answers: duckduckgo and bing (browser),
+    # google and brave (their APIs, when keyed), searxng (when its address is set).
+    search_order: tuple[str, ...] = tuple(
+        name.strip().casefold() for name in (os.getenv("VORA_SEARCH_ORDER") or "duckduckgo,bing,google,brave,searxng").split(",")
+        if name.strip())
     # A self-hosted SearXNG instance (its JSON format enabled), e.g. http://localhost:8080: metasearch with no per-engine
     # blocking. Used when no keyed API is configured.
     searxng_url: str | None = (os.getenv("VORA_SEARXNG_URL") or "").strip().rstrip("/") or None
@@ -119,7 +118,7 @@ class AppSettings:
     resolver_models: tuple[str, ...] = tuple(
         m.strip() for m in os.getenv(
             "VORA_RESOLVER_MODELS",
-            "groq:qwen/qwen3.8-27b,groq:openai/gpt-oss-20b,gemini:gemini-3.5-flash-lite,nvidia:nvidia/nemotron-3.5-lightning-30b-a3b").split(",") if m.strip())
+            "groq:qwen/qwen3.8-27b,gemini:gemini-3.5-flash-lite").split(",") if m.strip())
     resolver_sites: int = int(os.getenv("VORA_RESOLVER_SITES", "5"))
     # A learned structure is kept this long, and dropped after this many failed reads in a row.
     # The blacklist and registry data files are rewritten from the database this often.

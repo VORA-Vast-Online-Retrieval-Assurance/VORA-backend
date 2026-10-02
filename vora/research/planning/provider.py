@@ -95,10 +95,10 @@ def _models() -> list[str]:
 
 
 def _credentials(model: str) -> dict[str, str]:
-    if model.startswith("openai/nvidia/"):
-        if not settings.nvidia_api_key:
-            raise LLMUnavailable("NVIDIA_API_KEY is not configured")
-        return {"api_key": settings.nvidia_api_key, "api_base": settings.nvidia_api_base}
+    if model.startswith("groq/"):
+        if not settings.groq_api_key:
+            raise LLMUnavailable("GROQ_API_KEY is not configured")
+        return {"api_key": settings.groq_api_key}
     if model.startswith("gemini/"):
         if not settings.gemini_api_key:
             raise LLMUnavailable("GEMINI_API_KEY is not configured")

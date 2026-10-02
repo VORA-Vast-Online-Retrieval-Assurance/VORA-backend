@@ -154,7 +154,7 @@ class DiscoveryTests(TestCase):
         with patch.object(search_api, "settings", dataclasses.replace(keyed, search_api=None, search_api_key=None, searxng_url=None)):
             self.assertIsNone(search_api.configured())
 
-    def test_search_api_is_used_first_when_configured(self) -> None:
+    def test_search_api_is_used_where_the_order_puts_it(self) -> None:
         def handler(request: httpx.Request) -> httpx.Response:
             self.assertEqual(request.headers["X-Subscription-Token"], "key")
             self.assertEqual(request.url.params["country"], "in")
@@ -162,10 +162,12 @@ class DiscoveryTests(TestCase):
                 {"url": "https://stats.test/hospitals", "title": "Hospitals by state", "description": "India"},
                 {"url": "not a url", "title": "broken", "description": ""}]}})
 
-        keyed = dataclasses.replace(search_api.settings, search_api="brave", search_api_key="key")
+        keyed = dataclasses.replace(search_api.settings, search_api="brave", search_api_key="key",
+                                    search_order=("brave", "duckduckgo", "bing"))
         original = search_api.api_search
-        with patch.object(search_api, "settings", keyed), patch.object(
-                search_api, "api_search", lambda query, region=None: original(query, region, httpx.MockTransport(handler))):
+        with patch.object(search_api, "settings", keyed), patch.object(discovery, "settings", keyed), patch.object(
+                search_api, "api_search",
+                lambda query, region=None, provider=None: original(query, region, httpx.MockTransport(handler), provider)):
             engine = FakeEngine({})
             report: list[str] = []
             results = discover(engine, GoalPlan(normalized_goal="x", search_queries=["hospitals by state"],
@@ -174,6 +176,29 @@ class DiscoveryTests(TestCase):
         self.assertEqual(results[0].engine, "brave")
         self.assertEqual(engine.visited, [])  # no browser search needed
         self.assertEqual(report, ["brave: 1 results"])
+
+    def test_the_default_order_is_duckduckgo_then_bing_then_google(self) -> None:
+        self.assertEqual(search_api.settings.search_order[:3], ("duckduckgo", "bing", "google"))
+        calls: list[str] = []
+        keyed = dataclasses.replace(search_api.settings, search_api="google", search_api_key="key", search_api_cx="cx")
+        with patch.object(search_api, "settings", keyed), patch.object(discovery, "settings", keyed), patch.object(
+                search_api, "api_search", lambda query, region=None, provider=None: calls.append(provider) or [
+                    ("https://stats.test/google-result", "Google result", "")]):
+            # both browser engines come back empty, so Google answers last
+            engine = FakeEngine({})
+            report: list[str] = []
+            results = discover(engine, GoalPlan(normalized_goal="x", search_queries=["hospitals by state"]), 5,
+                               report=report)
+        self.assertEqual([item.url for item in results], ["https://stats.test/google-result"])
+        self.assertEqual(calls, ["google"])
+        self.assertEqual([line.split(":")[0] for line in report], ["duckduckgo", "bing", "google"])
+        # when DuckDuckGo answers, Google is never asked
+        calls.clear()
+        search_gate.reset()
+        with patch.object(search_api, "settings", keyed), patch.object(discovery, "settings", keyed), patch.object(
+                search_api, "api_search", lambda query, region=None, provider=None: calls.append(provider) or []):
+            discover(FakeEngine({"duckduckgo.com": DDG}), GoalPlan(normalized_goal="EV prices", search_queries=["EV prices"]), 5)
+        self.assertEqual(calls, [])
 
     def test_an_engine_that_blocked_us_rests(self) -> None:
         challenge = "<html><body>Unfortunately, bots use DuckDuckGo too.</body></html>"

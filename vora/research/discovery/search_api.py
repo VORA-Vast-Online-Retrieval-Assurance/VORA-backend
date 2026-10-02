@@ -37,10 +37,21 @@ def configured() -> str | None:
     return None
 
 
+def available() -> set[str]:
+    """The API sources that are set up: Google or Brave with their key, SearXNG with its address."""
+    provider = (settings.search_api or "").strip().casefold()
+    found = set()
+    if provider in {"brave", "google"} and settings.search_api_key and (provider != "google" or settings.search_api_cx):
+        found.add(provider)
+    if settings.searxng_url:
+        found.add("searxng")
+    return found
+
+
 def api_search(query: str, region: tuple[str, str] | None = None,
-               transport: httpx.BaseTransport | None = None) -> list[tuple[str, str, str]]:
-    """(url, title, snippet) results for ``query`` from the configured provider."""
-    provider = configured()
+               transport: httpx.BaseTransport | None = None, provider: str | None = None) -> list[tuple[str, str, str]]:
+    """(url, title, snippet) results for ``query`` from ``provider`` (default: the configured one)."""
+    provider = provider or configured()
     if provider is None:
         raise SearchApiError("No search API configured")
     with httpx.Client(timeout=TIMEOUT_SECONDS, transport=transport) as client:

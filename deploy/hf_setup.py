@@ -21,7 +21,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SECRET_KEYS = ("GROQ_API_KEY", "GEMINI_API_KEY", "NVIDIA_API_KEY")
+SECRET_KEYS = ("GROQ_API_KEY", "GEMINI_API_KEY")
 
 
 def read_env(path: Path) -> dict[str, str]:

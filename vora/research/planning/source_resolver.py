@@ -7,7 +7,7 @@ is repaired to the one that answers; a host that does not exist is dropped as no
 
 Every configured model is asked and their answers merged: a site several name ranks first.
 
-Nothing here names a site. Runs only when a model key (Groq, Gemini or NVIDIA) is set; without it the resolver returns nothing and
+Nothing here names a site. Runs only when a model key (Groq or Gemini) is set; without it the resolver returns nothing and
 VORA searches as before.
 """
 
@@ -78,8 +78,6 @@ def _endpoint(spec: str) -> tuple[str, str, str, str] | None:
         return provider, GROQ_URL, settings.groq_api_key, model
     if provider == "gemini" and settings.gemini_api_key:
         return provider, _GEMINI_URL, settings.gemini_api_key, model
-    if provider == "nvidia" and settings.nvidia_api_key:
-        return provider, settings.nvidia_api_base.rstrip("/") + "/chat/completions", settings.nvidia_api_key, model
     return None
 
 

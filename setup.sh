@@ -50,7 +50,7 @@ if [ -z "$BINARY" ]; then
 elif [ ! -f "$BINARY" ]; then
   echo "WARNING: VORA_BROWSER_BINARY does not point to a file: $BINARY"
 fi
-if [ -z "$(env_value NVIDIA_API_KEY)" ] && [ -z "$(env_value GEMINI_API_KEY)" ]; then
+if [ -z "$(env_value GROQ_API_KEY)" ] && [ -z "$(env_value GEMINI_API_KEY)" ]; then
   echo "NOTE: no LLM API key set; the deterministic planner will be used."
 fi
 if [ -z "$(env_value VORA_SEARCH_API_KEY)" ]; then

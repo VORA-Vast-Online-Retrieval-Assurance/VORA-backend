@@ -440,6 +440,17 @@ def _grow(page: Any, recipe: Recipe, timeout_ms: int) -> bool:
     return False
 
 
+def entry_provenance(url: str, page, recipe: Recipe) -> tuple[str, str]:
+    """The address and title to show for rows read after clicks. A listing opened by clicking from an entry page has no
+    address of its own that works in a fresh browser (the site keeps it in the session), so the source shown is the
+    entry page and the clicks that lead to the listing."""
+    clicks = [step.click_text or step.click for step in recipe.ready_steps
+              if not step.optional and (step.click or step.click_text)]
+    if not clicks:
+        return canonical_url(page.url), page.title()
+    return canonical_url(url), f"{page.title()} (from this page: {' > '.join(clicks)})"[:300]
+
+
 def _run_list(engine: "BrowserEngine", url: str, recipe: Recipe, *, source_name: str = "",
               known_ids: set[str] | None = None) -> RecipeRun:
     """Read a link collection: open the page, follow the recipe's clicks, take every titled link of the container."""
@@ -467,7 +478,7 @@ def _run_list(engine: "BrowserEngine", url: str, recipe: Recipe, *, source_name:
             run.note = f"container {recipe.container} not found"
             return run
         domain = (urlparse(url).hostname or "").removeprefix("www.")
-        page_url = canonical_url(page.url)
+        page_url, shown_title = entry_provenance(url, page, recipe)
         fetched_at = datetime.now(UTC)
         seen: set[str] = set()
         for item in items[:500]:
@@ -480,7 +491,7 @@ def _run_list(engine: "BrowserEngine", url: str, recipe: Recipe, *, source_name:
             seen.add(identifier)
             run.rows.append(Observation(
                 id=natural_id(domain, "id", identifier), source_url=page_url, method="recipe", fields=fields,
-                source_title=page.title(), extraction_confidence=0.9, context=source_name, context_kind="caption",
+                source_title=shown_title, extraction_confidence=0.9, context=source_name, context_kind="caption",
                 block_id=f"recipe:{recipe.container}", fetched_at=fetched_at))
         run.pages, run.ok, run.stopped = 1, bool(run.rows), "single_page"
         run.title, run.final_url = page.title(), page_url
@@ -535,7 +546,8 @@ def run_recipe(engine: "BrowserEngine", url: str, recipe: Recipe, *, source_name
                 run.note = run.note or problem
                 break
             run.pages += 1
-            page_url = canonical_url(page.url)
+            page_url, shown_title = entry_provenance(url, page, recipe)
+            link_base = canonical_url(page.url)
             new_on_page = 0
             for fields in rows:
                 identifier = fields[recipe.id_field]
@@ -545,10 +557,10 @@ def run_recipe(engine: "BrowserEngine", url: str, recipe: Recipe, *, source_name
                 new_on_page += identifier not in known
                 for name, value in list(fields.items()):
                     if name.endswith("_url") and value and not value.startswith("http"):
-                        fields[name] = urljoin(page_url, value)
+                        fields[name] = urljoin(link_base, value)
                 run.rows.append(Observation(
                     id=natural_id(domain, recipe.id_field, identifier), source_url=page_url, method="recipe", fields=fields,
-                    source_title=page.title(), extraction_confidence=0.95, context=source_name,
+                    source_title=shown_title, extraction_confidence=0.95, context=source_name,
                     context_kind="caption", block_id=f"recipe:{recipe.table}", fetched_at=fetched_at,
                 ))
             run.ok = True

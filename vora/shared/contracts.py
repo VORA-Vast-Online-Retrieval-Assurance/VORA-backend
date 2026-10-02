@@ -205,10 +205,15 @@ class Observation(BaseModel):
 
     @model_validator(mode="after")
     def _identity(self) -> "Observation":
-        if "(" in self.source_url:
-            from vora.shared.urls import strip_session
+        from vora.shared.urls import strip_session
 
+        if "(" in self.source_url:
             self.source_url = strip_session(self.source_url)
+        # A link inside a row (a document, a detail page) must not carry the reader's session either: it would
+        # expire and land on the site's error page.
+        for name, value in self.fields.items():
+            if name.endswith("_url") and "(" in value and value.startswith("http"):
+                self.fields[name] = strip_session(value)
         if not self.id:
             from vora.extraction.records import natural_key
 

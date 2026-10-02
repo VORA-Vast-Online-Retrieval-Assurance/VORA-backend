@@ -816,8 +816,8 @@ runs, not just counts, then writing a regression test before moving on.
 | `SUPABASE_URL` / `SUPABASE_JWT_AUDIENCE` / `SUPABASE_JWT_SECRET` | empty / `authenticated` / empty | Project whose access tokens are accepted (the secret only for older HS256 projects) |
 | `VORA_CORS_ORIGINS` | empty | Web origins allowed to call the API |
 | `VORA_LEGACY_OWNER` | empty | Supabase user id that owns tracks made before sign-in |
-| `LLM_MODEL` / `LLM_FALLBACK_MODEL` | NVIDIA Nemotron / Gemini | Planning vocabulary and header mapping |
-| `NVIDIA_API_KEY`, `GEMINI_API_KEY` | — | Provider credentials |
+| `LLM_MODEL` / `LLM_FALLBACK_MODEL` | Qwen (Groq) / Gemini | Planning vocabulary and header mapping |
+| `GROQ_API_KEY`, `GEMINI_API_KEY` | — | Provider credentials |
 | `LLM_TIMEOUT_SECONDS` | 45 | Model call limit |
 | `LLM_COOLDOWN_SECONDS` | 600 | After a model fails or times out, it's skipped this long and the fallback is used directly |
 | `VORA_SEMANTIC_LLM` | `true` | Allow model help for unplaceable headers |

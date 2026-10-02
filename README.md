@@ -54,7 +54,7 @@ Run the production image instead: `docker compose --profile app up -d --build` â
 | Variable | Needed | Meaning |
 |---|---|---|
 | `VORA_BROWSER_BINARY` | local only | Path to Chrome/Chromium (set automatically in Docker) |
-| `GROQ_API_KEY`, `GEMINI_API_KEY`, `NVIDIA_API_KEY` | at least one | Language models for planning and finding official sites |
+| `GROQ_API_KEY`, `GEMINI_API_KEY` | at least one | Language models for planning and finding official sites |
 | `VORA_AUTH` | yes | `supabase` in production, `none` for local testing |
 | `SUPABASE_URL` | with supabase auth | Your Supabase project URL (tokens are checked against its public keys) |
 | `VORA_CORS_ORIGINS` | production | Comma-separated web origins allowed to call the API, e.g. `https://awdax.pages.dev` |

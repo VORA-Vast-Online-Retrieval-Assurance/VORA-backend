@@ -14,7 +14,7 @@ Frontend on Cloudflare Pages, sign-in on Supabase, backend on a free Hugging Fac
 
    | Name | Kind | Value |
    | --- | --- | --- |
-   | `GROQ_API_KEY`, `GEMINI_API_KEY`, `NVIDIA_API_KEY` | Secret | your model keys |
+   | `GROQ_API_KEY`, `GEMINI_API_KEY` | Secret | your model keys |
    | `HF_TOKEN` | Secret | the write token |
    | `SEARXNG_SECRET` | Secret | any long random hex |
    | `SUPABASE_URL` | Secret | your Supabase project URL |

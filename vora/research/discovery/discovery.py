@@ -224,26 +224,32 @@ def on_topic(results: list[SearchResult], query: str) -> list[SearchResult] | No
 
 def _search(engine: BrowserEngine, query: str, region: tuple[str, str] | None = None,
             deadline: float | None = None, report: list[str] | None = None) -> list[SearchResult]:
-    """Run one query: the search API when configured, else the browser engines.
+    """Run one query through the sources in ``VORA_SEARCH_ORDER`` (default: DuckDuckGo, Bing, Google, Brave, SearXNG),
+    stopping at the first that answers. A source that is not set up (no key, no address) is skipped.
 
     A browser engine is skipped for the next one when its page is a
     verification page, a consent screen, empty, or unrelated to the query.
     What happened is added to ``report``.
     """
     notes = report if report is not None else []
-    provider = search_api.configured()
-    if provider:
-        try:
-            found = [SearchResult(url=url, title=title[:200], snippet=snippet[:400], rank=index, engine=provider)
-                     for index, (url, title, snippet) in enumerate(search_api.api_search(query, region))
-                     if _absolute(url)]
-        except Exception as exc:
-            notes.append(f"{provider}: failed ({type(exc).__name__})")
-        else:
-            notes.append(f"{provider}: {len(found)} results")
+    templates = dict(SEARCH_ENGINES)
+    usable = search_api.available()
+    for name in settings.search_order:
+        if name in usable:
+            try:
+                found = [SearchResult(url=url, title=title[:200], snippet=snippet[:400], rank=index, engine=name)
+                         for index, (url, title, snippet) in enumerate(search_api.api_search(query, region, provider=name))
+                         if _absolute(url)]
+            except Exception as exc:
+                notes.append(f"{name}: failed ({type(exc).__name__})")
+                continue
+            notes.append(f"{name}: {len(found)} results")
             if found:
                 return [replace(result, query=query) for result in found]
-    for name, template in SEARCH_ENGINES:
+            continue
+        if name not in templates:
+            continue
+        template = templates[name]
         if deadline is not None and time.monotonic() >= deadline:
             notes.append(f"{name}: skipped (time budget)")
             break
