@@ -205,6 +205,10 @@ class Observation(BaseModel):
 
     @model_validator(mode="after")
     def _identity(self) -> "Observation":
+        if "(" in self.source_url:
+            from vora.shared.urls import strip_session
+
+            self.source_url = strip_session(self.source_url)
         if not self.id:
             from vora.extraction.records import natural_key
 
@@ -225,6 +229,13 @@ class Observation(BaseModel):
 class SourceOutcome(BaseModel):
     id: str
     url: str
+
+    @field_validator("url", "linked_from", mode="after", check_fields=False)
+    @classmethod
+    def _no_session(cls, value):
+        from vora.shared.urls import strip_session
+
+        return strip_session(value) if isinstance(value, str) else value
     title: str = ""
     # empty: rendered, but no accepted or partial rows (nothing usable found).
     status: Literal["selected", "complete", "partial", "empty", "failed", "skipped", "blocked"]

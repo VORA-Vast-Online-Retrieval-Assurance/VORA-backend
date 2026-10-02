@@ -96,6 +96,38 @@ def safe_get(url: str, *, timeout: float = 10, max_bytes: int = 300_000, headers
     raise ValueError("Too many redirects")
 
 
+# Temporary session ids that some servers keep in the address. They expire, so a stored or shown address that
+# carries one leads to an error page later; opened without it, the site simply starts a fresh session.
+_COOKIELESS_SEGMENT = re.compile(r"/\((?:[A-Za-z]\([^()]*\))+\)(?=/|$)")
+_SESSION_PARAMS = re.compile(r"(?i)[;&?](?:jsessionid|phpsessid|aspsessionid)=[^&#;/]*")
+
+
+def strip_session(url: str) -> str:
+    """``https://x/(S(abc))/page.aspx;jsessionid=1?a=2`` -> ``https://x/page.aspx?a=2``."""
+    if not url:
+        return url
+    cleaned = _COOKIELESS_SEGMENT.sub("", url)
+    head, sep, tail = cleaned.partition("?")
+    head = re.sub(r"(?i);jsessionid=[^/?#]*", "", head)
+    tail = "&".join(p for p in tail.split("&") if not re.match(r"(?i)(jsessionid|phpsessid|aspsessionid)=", p))
+    return head + (sep + tail if tail else "") + ("" if not sep or tail else "")
+
+
+_ERROR_SEGMENT = re.compile(r"(?i)^(error|errors|errorpage|404|notfound|not-found|pagenotfound|page-not-found|"
+                            r"unavailable|oops)(\.[a-z]{2,5})?$")
+_ERROR_TITLE = re.compile(r"(?i)^\s*(error\b|404\b|page not found|not found|sorry,? this page|this page (is|isn.t) available|"
+                          r"access denied|service unavailable|oops)")
+
+
+def looks_like_error_page(url: str, title: str = "", status: int | None = None) -> bool:
+    """Whether a read ended on an error page: an error status, an address whose last part names an error, or a title
+    that says so. Such a page is not data and must never be kept or shared."""
+    if status is not None and status >= 400:
+        return True
+    last = urlparse(url or "").path.rstrip("/").rsplit("/", 1)[-1]
+    return bool(_ERROR_SEGMENT.match(last) or _ERROR_TITLE.match(title or ""))
+
+
 def normalize_domain(value: str) -> str:
     """"https://www.CarDekho.com/cars?x" -> "cardekho.com". Raises ValueError if invalid."""
     text = str(value or "").strip().lower()

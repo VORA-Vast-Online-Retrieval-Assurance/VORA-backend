@@ -219,7 +219,7 @@ def run_api(engine: "BrowserEngine", url: str, recipe: "Recipe", *, source_name:
     following = recipe.api_url
     for number in range(wanted):
         if deadline is not None and time.monotonic() >= deadline:
-            run.note = "time budget reached"
+            run.note, run.stopped = "time budget reached", "time_budget"
             break
         try:
             payload = get_json(engine, following if recipe.next_path else page_url(recipe, number))
@@ -229,6 +229,7 @@ def run_api(engine: "BrowserEngine", url: str, recipe: "Recipe", *, source_name:
         items = dig(payload, recipe.records_path) if recipe.records_path else payload
         if not isinstance(items, list) or not items:
             run.note = run.note or ("the data service returned no records" if number == 0 else "")
+            run.stopped = "last_page"
             break
         fresh = 0
         for item in items[:1000]:
@@ -257,10 +258,14 @@ def run_api(engine: "BrowserEngine", url: str, recipe: "Recipe", *, source_name:
             following = urljoin(recipe.api_url, following)
         total = dig(payload, recipe.total_pages_path) if recipe.total_pages_path else None
         if isinstance(total, int) and number + 1 >= total:
+            run.stopped = "last_page"
             break
         if known and fresh == 0:
             run.stopped_at_known = True
+            run.stopped = "known_records"
             break
+        if number + 1 >= wanted:
+            run.stopped = "max_pages"
     run.ok = bool(run.rows)
     run.final_url, run.title = url, source_name
     if not run.rows and not run.note:

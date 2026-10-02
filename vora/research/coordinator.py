@@ -34,14 +34,16 @@ from vora.extraction.temporal import today_utc
 from vora.research.planning.source_resolver import name_columns, resolve_sites, usable_models
 from vora.research.planning.provider import analyze_goal, available_models, configured_models, map_fields
 from vora.learning.recipes import Recipe, RecipeRun, canonical_url
+from vora.learning.structure import section_key
 from vora.shared.contracts import FileLink, GoalPlan, Observation, ResearchSnapshot, SourceOutcome
-from vora.shared.urls import domain_of, ensure_public_url, goal_domains
+from vora.shared.urls import looks_like_error_page, domain_of, ensure_public_url, goal_domains
 from vora.shared.system import available_memory_mb
 
 from vora.research.discovery import search_api
 from vora.research.reading.browser_pool import EXPLORE, PAGE, SEARCH, BrowserPool
 from vora.output.datasets import download as download_dataset
 from vora.research.reading.deep_lane import DeepLane, DeepResult, HostGate
+from vora.research.reading.relevance import on_topic
 from vora.research.reading.source_cache import CachedRead, SourceCache, age_text, page_key, recipe_key
 from vora.output.datasets import download_file
 from vora.research.discovery.discovery import SearchResult, discover
@@ -96,6 +98,15 @@ class BrowserUnavailable(RuntimeError):
 SAVE_INTERVAL = 5.0
 # Share of the batch budget that searching may use, leaving time for pages.
 DISCOVERY_SHARE = 0.4
+# Why a recipe read ended, in words a person can read (RecipeRun.stopped).
+STOP_TEXT = {
+    "known_records": "reached records this track already had",
+    "max_pages": "reached the page limit for one batch",
+    "time_budget": "ran out of time for this batch",
+    "last_page": "reached the last page",
+    "no_next_page": "the pager did not move to the next page",
+    "error_page": "the site answered with an error page",
+}
 # Order in which the interactive pass revisits pages: emptiest first.
 DEEP_PRIORITY = {"empty": 0, "partial": 1, "complete": 3}
 
@@ -1146,9 +1157,9 @@ class ResearchCoordinator:
             sections = self._learned_sections(engine, batch, candidate)
             if not sections:
                 return None
-            done = [self._read_section(engine, collector, batch, candidate, section_url, learn_key(section_url),
-                                       section_recipe, learn_key(section_url), True)
-                    for section_url, section_recipe in sections]
+            done = [self._read_section(engine, collector, batch, candidate, section_url, section_key,
+                                       section_recipe, section_key, True)
+                    for section_url, section_recipe, section_key in sections]
             done = [item for item in done if item is not None]
             if not done:
                 return None
@@ -1209,6 +1220,15 @@ class ResearchCoordinator:
             self.repository.update_run(run_id, detail=f"{host}: recipe did not fit ({run.note})")
             return None
         accepted, partial, rejected = collector.score(run.rows)
+        off_topic = ""
+        if learned and reused is None:
+            fits, off_topic = on_topic(batch.plan, host, run.rows)
+            if not fits:
+                # Not about this request: the rows stay out of the answer (they remain visible as set aside).
+                aside = [row.model_copy(update={"status": "rejected", "reasons": [*row.reasons, off_topic]})
+                         for row in [*accepted, *partial]]
+                accepted, partial, rejected = [], [], [*rejected, *aside]
+                batch.notes.append(off_topic)
         if learned:
             if accepted or partial:
                 self.repository.touch_learned(key)
@@ -1225,6 +1245,8 @@ class ResearchCoordinator:
         new = sum(1 for row in run.rows if str(row.fields.get(id_field)) not in known)
         reason = (f"Read with the {name} {'learned ' if learned else ''}recipe: {run.pages} page(s), {len(run.rows)} records, {new} new"
                   + (" (stopped at records already collected)" if run.stopped_at_known else ""))
+        if run.stopped in STOP_TEXT and run.stopped != "known_records":
+            reason += f" · stopped: {STOP_TEXT[run.stopped]}"
         if reused is not None:
             reason = (f"Reused a shared read of the {name} listing from {age_text(reused.age_seconds)}: "
                       f"{len(run.rows)} records, {new} new; the site was not contacted again")
@@ -1309,7 +1331,10 @@ class ResearchCoordinator:
         def read():
             batch.gate.wait(url)
             result = engine.execute(url)
-            return result, collector.take(result.execution_id)
+            extracted = collector.take(result.execution_id)
+            if looks_like_error_page(result.final_url, result.title):
+                raise RuntimeError("The site answered with an error page, not data")
+            return result, extracted
 
         def keep(pair) -> None:
             result, extracted = pair
@@ -1336,8 +1361,8 @@ class ResearchCoordinator:
         result = SimpleNamespace(final_url=found.final_url, title=found.title, status=found.status)
         return result, extracted, found
 
-    def _learned_sections(self, engine, batch: Batch, candidate: RankedCandidate) -> list[tuple[str, Recipe]]:
-        """The listings of a resolved site that the request is about, ``[(address, recipe)]``: kept from an earlier
+    def _learned_sections(self, engine, batch: Batch, candidate: RankedCandidate) -> list[tuple[str, Recipe, str]]:
+        """The listings of a resolved site that the request is about, ``[(address, recipe, key)]``: kept from an earlier
         learning, or learned now (the learner opens the page, reads its listing or its data service, and follows
         links the request points at; see ``vora.learning.structure``)."""
         host, url = candidate.domain, candidate.url
@@ -1348,14 +1373,17 @@ class ResearchCoordinator:
             recipe = stored["recipe"]
             if recipe is None:
                 return []                                    # looked at recently: nothing readable there
-            addresses = recipe["urls"] if recipe.get("kind") == "sections" else [url]
+            if recipe.get("kind") == "sections":
+                entries = recipe.get("entries") or [{"url": a, "key": learn_key(a)} for a in recipe.get("urls", [])]
+            else:
+                entries = [{"url": url, "key": key}]
             found = []
-            for address in addresses:
-                part = stored if address == url else repository.get_learned(learn_key(address), settings.learned_ttl_days)
+            for entry in entries:
+                part = stored if entry["key"] == key else repository.get_learned(entry["key"], settings.learned_ttl_days)
                 try:
-                    found.append((address, Recipe.model_validate(part["recipe"])))
+                    found.append((entry["url"], Recipe.model_validate(part["recipe"]), entry["key"]))
                 except (TypeError, ValueError, KeyError):
-                    repository.fail_learned(learn_key(address), 1)
+                    repository.fail_learned(entry["key"], 1)
             return found
         remaining = batch.deadline - time.monotonic() if math.isfinite(batch.deadline) else 240
         if remaining < 40:
@@ -1372,14 +1400,17 @@ class ResearchCoordinator:
             batch.notes.append(f"{host}: no readable listing found ({'; '.join(learned.notes[-1:])})")
             return []
         if learned.sections:
+            entries = []
             for section in learned.sections:
-                repository.save_learned(learn_key(section["url"]), section["url"], section["recipe"])
-            repository.save_learned(key, url, {"kind": "sections", "urls": [s["url"] for s in learned.sections]})
-            batch.notes.append(f"{host}: learned {len(learned.sections)} listings through its links")
-            return [(s["url"], Recipe.model_validate(s["recipe"])) for s in learned.sections]
+                section_id = section.get("key") or section_key(section["url"], section["recipe"])
+                repository.save_learned(section_id, section["url"], section["recipe"])
+                entries.append({"url": section["url"], "key": section_id})
+            repository.save_learned(key, url, {"kind": "sections", "entries": entries})
+            batch.notes.append(f"{host}: learned {len(entries)} listings")
+            return [(e["url"], Recipe.model_validate(s["recipe"]), e["key"]) for e, s in zip(entries, learned.sections)]
         repository.save_learned(key, url, learned.recipe)
         batch.notes.append(f"{host}: learned its listing ({learned.recipe.get('kind')})")
-        return [(url, Recipe.model_validate(learned.recipe))]
+        return [(url, Recipe.model_validate(learned.recipe), key)]
 
     def _diagnostics(self, batch: Batch, attempted: list[SourceOutcome]) -> str:
         """One line that explains a batch: planner, search, page outcomes, time."""

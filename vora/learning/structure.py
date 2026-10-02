@@ -368,8 +368,32 @@ def has_headers(table: TableInfo) -> bool:
     return typed * 2 < max(1, len([h for h in table.headers if h]))
 
 
+PAGE_PARAMS = {"page", "pagenumber", "pageno", "page_no", "pageindex", "p", "pg", "offset", "start", "skip", "from"}
+PAGER_LABEL = re.compile(r"(?i)^\s*(page\s*)?\d{1,4}\s*$|^\s*(next|prev|previous|first|last|older|newer|more|back)\b|^[\W]{1,3}$")
+
+
+def looks_like_pagination(items: list[dict]) -> bool:
+    """Items that are the links of a pager, not records: labels like "3" or "Next", or addresses that are one address
+    with a changing page parameter."""
+    if not items:
+        return False
+    labelled = sum(1 for item in items if PAGER_LABEL.match(item.get("title", "")))
+    if labelled >= 0.6 * len(items):
+        return True
+    keys = set()
+    for item in items:
+        parts = urlparse(item["href"])
+        query = "&".join(sorted(p for p in parts.query.split("&") if p.split("=")[0].lower() not in PAGE_PARAMS))
+        changed = any(p.split("=")[0].lower() in PAGE_PARAMS for p in parts.query.split("&"))
+        keys.add((parts.netloc, parts.path, query) if changed else (parts.netloc, parts.path, query, item["href"]))
+    paged = sum(1 for item in items if any(p.split("=")[0].lower() in PAGE_PARAMS
+                                           for p in urlparse(item["href"]).query.split("&")))
+    return paged >= 0.7 * len(items) and len({k[:3] for k in keys}) <= 2
+
+
 def collections_of(data: dict) -> list[CollectionInfo]:
     found = [CollectionInfo(c["selector"], c["itemTag"], c["items"], c["count"], c["more"]) for c in data.get("collections", [])]
+    found = [c for c in found if not looks_like_pagination(c.items)]
     return sorted(found, key=lambda c: c.score, reverse=True)
 
 
@@ -540,8 +564,9 @@ def safe_to_click(control: dict, page_url: str) -> bool:
     return True
 
 
-def click(page, selector: str | None = None, label: str | None = None) -> bool:
-    """Click a control; wait for a navigation if it causes one. True if the click happened."""
+def click(page, selector: str | None = None, label: str | None = None, force: bool = False) -> bool:
+    """Click a control; wait for a navigation if it causes one. True if the click happened. ``force`` activates it
+    through the page even when it is not visible (a control found in the markup only)."""
     try:
         if selector:
             target = page.locator(selector).first
@@ -552,7 +577,7 @@ def click(page, selector: str | None = None, label: str | None = None) -> bool:
             return False
         try:
             with page.expect_navigation(timeout=8000):
-                target.click(timeout=5000)
+                (target.evaluate("e => e.click()") if force else target.click(timeout=5000))
         except Exception:  # noqa: BLE001 - clicks that change the page in place
             pass
         page.wait_for_load_state("domcontentloaded", timeout=nav_ms())
@@ -579,35 +604,76 @@ def close_overlays(page, steps: list[dict], log: list[str]) -> None:
 
 def replay(page, steps: list[dict]) -> None:
     for step in steps:
-        click(page, step.get("click"), step.get("click_text"))
+        click(page, step.get("click"), step.get("click_text"), force=bool(step.get("force")))
 
 
-def reach_listing(page, url: str, log: list[str]):
-    """Open the page, close overlays, and follow "view all / more" links while that gives a better listing."""
+def hidden_controls(response, page_url: str, shown: list[dict]) -> list[dict]:
+    """Controls that expand a listing which the visible page does not offer, from the HTML the server sent."""
+    from .source_scan import scan
+
+    try:
+        html = response.text() if response is not None else ""
+    except Exception:  # noqa: BLE001 - a redirect or an empty body has no text
+        return []
+    known = {(c.get("selector") or "") for c in shown} | {c.get("href") or "" for c in shown if c.get("href")}
+    found = []
+    for control in scan(html, page_url):
+        selector = control.selector
+        if not selector or selector in known or (control.href and control.href in known):
+            continue
+        if not EXPAND.search(control.label):
+            continue
+        entry = {"selector": selector, "label": control.label, "href": control.href, "inForm": control.in_form,
+                 "type": "", "force": True}
+        if safe_to_click(entry, page_url):
+            found.append(entry)
+    return found
+
+
+def expand_controls(page, url: str) -> list[dict]:
+    """Every control on ``url`` that may open a fuller listing: visible ones from the page, and the markup's own."""
+    response = goto(page, url, nav_ms())
+    time.sleep(2)
+    close_overlays(page, [], [])
+    data, _ = digest(page, wait=2)
+    shown = [c for c in data["controls"] if EXPAND.search(c["label"]) and safe_to_click(c, page.url)]
+    return [*shown, *hidden_controls(response, page.url, data["controls"])]
+
+
+def reach_listing(page, url: str, log: list[str], first: dict | None = None):
+    """Open the page, close overlays, and follow "view all / more" links while that gives a better listing.
+    ``first`` forces the first control to follow (to learn a parallel listing of the same page)."""
     steps: list[dict] = []
-    goto(page, url, nav_ms())
+    response = goto(page, url, nav_ms())
     time.sleep(2)
     close_overlays(page, steps, log)
     data, best = snapshot(page, wait=4)
+    markup = hidden_controls(response, page.url, data["controls"])      # controls the screen does not show
     tried: set[str] = set()
     actions = 0
-    while actions < MAX_ACTIONS and is_preview(best):
+    forced = first
+    while actions < MAX_ACTIONS and (forced is not None or is_preview(best)):
         candidates = [c for c in data["controls"] if EXPAND.search(c["label"]) and c["selector"] not in tried]
         if best and best[0] == "list" and best[1].more:
             candidates.insert(0, {**best[1].more, "href": "", "inForm": False, "type": ""})
         candidates = [c for c in candidates if c["selector"] not in tried and safe_to_click(c, page.url)]
+        if not candidates:
+            candidates = [c for c in markup if c["selector"] not in tried]
+        if forced is not None:
+            candidates, forced = [forced], None
         if not candidates:
             break
         control = candidates[0]
         tried.add(control["selector"])
         actions += 1
         before = page.url
-        if not click(page, selector=control["selector"]):
+        if not click(page, selector=control["selector"], force=bool(control.get("force"))):
             continue
         close_overlays(page, [], log)
         _, after = snapshot(page, wait=8)
-        if grew(after, best):
-            steps.append({"click": control["selector"], "optional": False, "navigates": page.url != before})
+        if grew(after, best) or first is not None and after is not None and actions == 1:
+            steps.append({"click": control["selector"], "optional": False, "navigates": page.url != before,
+                          **({"force": True} if control.get("force") else {})})
             kind, found = after
             log.append(f"followed '{control['label']}': {found.count} {'rows' if kind == 'table' else 'items'}"
                        + (" with a pager" if kind == "table" and found.pager else ""))
@@ -778,6 +844,9 @@ def learn(engine, url: str, *, names_fn=None, verify: bool = True, budget: float
         _GOAL.reset(token)
     if result.ok:
         result = prefer_service(engine, url, result)
+        left = budget - (time.monotonic() - started)
+        if not result.sections and left > PARALLEL_MIN_SECONDS:
+            result = add_parallel_listings(engine, url, result, names_fn=names_fn, verify=verify, budget=left)
     if result.ok or not goal or hops <= 0:
         return result
     for link in section_links(engine, url, goal):
@@ -795,6 +864,75 @@ def learn(engine, url: str, *, names_fn=None, verify: bool = True, budget: float
 
 
 MAX_SECTIONS = 4
+MAX_PARALLEL = 5            # listings of one page learned besides the first
+PARALLEL_MIN_SECONDS = 70   # time one more listing needs
+
+
+def section_key(url: str, recipe: dict) -> str:
+    """What a learned recipe belongs to: the page (host and path, no session) and, when a page has several listings,
+    the control that opens this one."""
+    import hashlib
+
+    from vora.shared.urls import strip_session
+
+    parts = urlparse(strip_session(url))
+    base = ((parts.hostname or "").removeprefix("www.") + parts.path.rstrip("/")).lower()[:200]
+    opener = next((s.get("click") for s in reversed(recipe.get("ready_steps") or [])
+                   if not s.get("optional") and s.get("click")), "")
+    return base + (f"#{hashlib.sha1(opener.encode()).hexdigest()[:8]}" if opener else "")
+
+
+def _ids(sample: list[dict]) -> set[str]:
+    return {str(row.get("id") or row.get("gazette_id") or next(iter(row.values()), "")) for row in sample}
+
+
+def add_parallel_listings(engine, url: str, result: "LearnedStructure", *, names_fn, verify: bool,
+                          budget: float) -> "LearnedStructure":
+    """A home page often has several parallel "view all" controls (one per category). The first one learned is the
+    result; the others are tried the same way and kept when they give a different, verified listing."""
+    from vora.browser.engine import new_context
+
+    started = time.monotonic()
+    opener = next((s.get("click") for s in reversed(result.recipe.get("ready_steps") or [])
+                   if not s.get("optional") and s.get("click")), None)
+    if opener is None:
+        return result
+    token = _NAV.set(engine.settings.navigation_timeout_ms)
+    context = new_context(engine, downloads=True)
+    try:
+        page = context.new_page()
+        page.set_default_timeout(nav_ms())
+        try:
+            controls = [c for c in expand_controls(page, url) if c["selector"] != opener]
+        except Exception as exc:  # noqa: BLE001
+            result.notes.append(f"parallel listings: could not look ({type(exc).__name__})")
+            return result
+    finally:
+        context.close()
+        _NAV.reset(token)
+    sections = [{"url": url, "key": section_key(url, result.recipe), "recipe": result.recipe, "sample": result.sample}]
+    seen = [_ids(result.sample)]
+    tried = 0
+    for control in controls:
+        left = budget - (time.monotonic() - started)
+        if tried >= MAX_PARALLEL or left < PARALLEL_MIN_SECONDS:
+            if tried < len(controls):
+                result.notes.append(f"parallel listings: stopped after {tried} of {len(controls)} (time or limit)")
+            break
+        tried += 1
+        sub = learn_page(engine, url, names_fn=names_fn, verify=verify, budget=min(left, 90), first=control)
+        opened = sub.ok and any(s.get("click") == control["selector"] and not s.get("optional")
+                                for s in (sub.recipe or {}).get("ready_steps", []))
+        mine = _ids(sub.sample) if sub.ok else set()
+        if not opened or not mine or any(len(mine & other) >= 0.5 * len(mine) for other in seen):
+            result.notes.append(f"parallel '{control['label']}': " + ("same listing" if opened and mine else "nothing new"))
+            continue
+        seen.append(mine)
+        sections.append({"url": url, "key": section_key(url, sub.recipe), "recipe": sub.recipe, "sample": sub.sample})
+        result.notes.append(f"parallel '{control['label']}': learned a second listing ({len(sub.sample)} records)")
+    if len(sections) > 1:
+        result.sections = sections
+    return result
 _SKIP_LINK = re.compile(r"login|logout|sign.?in|register|contact|feedback|privacy|terms|cookie|disclaimer|sitemap|"
                         r"javascript:|mailto:|tel:|\.(?:pdf|docx?|xlsx?|zip|jpe?g|png|gif|mp4)(?:$|\?)", re.I)
 
@@ -895,7 +1033,8 @@ def learn_here(engine, url: str, *, names_fn=None, verify: bool = True, budget: 
     return result
 
 
-def learn_page(engine, url: str, *, names_fn=None, verify: bool = True, budget: float = TIME_BUDGET) -> "LearnedStructure":
+def learn_page(engine, url: str, *, names_fn=None, verify: bool = True, budget: float = TIME_BUDGET,
+               first: dict | None = None) -> "LearnedStructure":
     """Learn the listing structure of ``url`` with the engine's browser. ``names_fn(headers, sample_rows)`` may
     suggest short field names (a model call); without it, or if its answer is not clean, plain header slugs are used."""
     from vora.browser.engine import new_context
@@ -908,7 +1047,7 @@ def learn_page(engine, url: str, *, names_fn=None, verify: bool = True, budget: 
         page = context.new_page()
         page.set_default_timeout(nav_ms())
         try:
-            steps, found = reach_listing(page, url, result.notes)
+            steps, found = reach_listing(page, url, result.notes, first=first)
         except Exception as exc:  # noqa: BLE001 - the site did not load, or changed under us
             result.notes.append(f"could not open the page: {type(exc).__name__}")
             return result

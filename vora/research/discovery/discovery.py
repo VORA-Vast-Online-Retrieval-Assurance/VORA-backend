@@ -18,7 +18,7 @@ from vora.browser.engine import BrowserEngine
 from vora.extraction.noise import CONSENT_PATTERNS, is_challenge_page
 from vora.extraction.semantics import topic_tokens
 from vora.shared.contracts import GoalPlan
-from vora.shared.urls import goal_domains, same_site
+from vora.shared.urls import goal_domains, same_site, strip_session
 from vora.shared.regions import REGIONS
 
 from vora.research.discovery import search_api
@@ -314,6 +314,7 @@ def discover(engine: BrowserEngine, plan: GoalPlan, limit: int, preferred: list[
 
     def add(items: list[SearchResult], origin: str) -> None:
         for item in items:
+            item = replace(item, url=strip_session(item.url))
             key = item.url.rstrip("/")
             if key not in results and len(results) < limit:
                 results[key] = replace(item, origin=origin)

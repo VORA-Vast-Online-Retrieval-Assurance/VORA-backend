@@ -20,6 +20,8 @@ from typing import TYPE_CHECKING, Any, Literal
 from urllib.parse import urljoin, urlparse
 
 from pydantic import BaseModel, Field, field_validator, model_validator
+
+from vora.shared.urls import looks_like_error_page, strip_session
 from urllib.parse import parse_qsl
 
 if TYPE_CHECKING:
@@ -44,6 +46,9 @@ class Step(BaseModel):
     click_text: str | None = None
     optional: bool = True
     navigates: bool = False
+    # Activate the element through the page (``element.click()``) even when it is not visible: a control the markup
+    # has but the screen does not show (found by the source scan).
+    force: bool = False
 
     _bounded = field_validator("click", "click_text")(_plain)
 
@@ -133,6 +138,8 @@ class RecipeRun:
     final_url: str = ""
     note: str = ""
     stopped_at_known: bool = False
+    # Why reading ended: last_page, max_pages, time_budget, known_records, no_next_page, single_page, error_page.
+    stopped: str = ""
 
 
 # Reads the recipe's table: header cells, then each row's cell texts and first link.
@@ -162,12 +169,9 @@ _READ_TABLE = r"""
 }
 """
 
-# A session id kept in the path by some servers ("/(S(abc123))/page.aspx") changes on every visit.
-_SESSION_SEGMENT = re.compile(r"/\(S\([^)]*\)\)", re.I)
-
-
 def canonical_url(url: str) -> str:
-    return _SESSION_SEGMENT.sub("", url)
+    """The address without a temporary session id (see ``vora.shared.urls.strip_session``)."""
+    return strip_session(url)
 
 
 def _key(text: str) -> str:
@@ -209,6 +213,30 @@ def row_identity(recipe: Recipe, cells: list[dict], attributes: dict | None) -> 
     return ""
 
 
+# A cell that says "nothing here" rather than something: when most rows of a column say the same such thing, the
+# column has no value for those rows ("This Gazette may contain Multiple Ministries", "Not Applicable", "N/A").
+PLACEHOLDER = re.compile(r"(?i)\b(may contains?|multiple|various|not applicable|not available|n/?a|none|nil|unknown|tbd)\b"
+                         r"|^[\s\-\u2013\u2014.]*$")
+PLACEHOLDER_SHARE = 0.6
+
+
+def blank_placeholders(rows: list[dict[str, str]], skip: set[str]) -> None:
+    """Remove placeholder values from ``rows`` in place (a field with no value is simply absent)."""
+    if len(rows) < 3:
+        return
+    for name in {key for row in rows for key in row} - skip:
+        counts: dict[str, int] = {}
+        for row in rows:
+            value = " ".join(str(row.get(name, "")).split())
+            if value:
+                counts[value] = counts.get(value, 0) + 1
+        for value, count in counts.items():
+            if count >= PLACEHOLDER_SHARE * len(rows) and PLACEHOLDER.search(value) and len(value) <= 120:
+                for row in rows:
+                    if " ".join(str(row.get(name, "")).split()) == value:
+                        del row[name]
+
+
 def rows_from_table(table: dict | None, recipe: Recipe) -> tuple[list[dict[str, str]], str]:
     """Map a read table to fields. Returns the rows and, when the table does not fit the recipe, why."""
     if not table:
@@ -235,6 +263,7 @@ def rows_from_table(table: dict | None, recipe: Recipe) -> tuple[list[dict[str, 
         rows.append(fields)
     if table["rows"] and not rows:
         return [], f"identifiers no longer match {recipe.id_pattern}"
+    blank_placeholders(rows, {recipe.id_field} | {n for n in positions.values() if n == recipe.id_field})
     return rows, ""
 
 
@@ -297,14 +326,16 @@ def natural_id(domain: str, label: str, identifier: str) -> str:
     return hashlib.sha256(payload.encode()).hexdigest()[:16]
 
 
-def goto(page: Any, url: str, timeout_ms: int) -> None:
-    """Open ``url``; a site that redirects itself (a session address, a cookie notice) is followed, not an error."""
+def goto(page: Any, url: str, timeout_ms: int) -> Any:
+    """Open ``url``; a site that redirects itself (a session address, a cookie notice) is followed, not an error.
+    Returns the response (whose body is the HTML the server sent), or None after a self-redirect."""
     try:
-        page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
+        return page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
     except Exception as exc:  # noqa: BLE001
         if "interrupted by another navigation" not in str(exc):
             raise
         page.wait_for_load_state("domcontentloaded", timeout=timeout_ms)
+        return None
 
 
 def _wait_for(page: Any, selector: str | None, seconds: float = 12) -> None:
@@ -338,13 +369,13 @@ def _click(page: Any, step: Step, timeout_ms: int) -> bool:
         text = (step.click_text or "").replace('"', '\\"')
         locator = page.locator(f'a:has-text("{text}"), button:has-text("{text}"), input[value*="{text}"]')
     try:
-        if locator.count() == 0 or not locator.first.is_visible():
+        if locator.count() == 0 or (not step.force and not locator.first.is_visible()):
             return False
         if step.navigates:
             with page.expect_navigation(timeout=timeout_ms):
-                locator.first.click(timeout=timeout_ms)
+                (locator.first.evaluate("e => e.click()") if step.force else locator.first.click(timeout=timeout_ms))
         else:
-            locator.first.click(timeout=timeout_ms)
+            (locator.first.evaluate("e => e.click()") if step.force else locator.first.click(timeout=timeout_ms))
         page.wait_for_load_state("domcontentloaded", timeout=timeout_ms)
         return True
     except Exception:
@@ -423,6 +454,9 @@ def _run_list(engine: "BrowserEngine", url: str, recipe: Recipe, *, source_name:
         page = context.new_page()
         page.set_default_timeout(timeout_ms)
         goto(page, url, timeout_ms)
+        if looks_like_error_page(page.url, page.title()):
+            run.note, run.stopped = "the site answered with an error page", "error_page"
+            return run
         for step in recipe.ready_steps:
             if not _click(page, step, timeout_ms) and not step.optional:
                 run.note = f"step '{step.click or step.click_text}' not found"
@@ -448,7 +482,7 @@ def _run_list(engine: "BrowserEngine", url: str, recipe: Recipe, *, source_name:
                 id=natural_id(domain, "id", identifier), source_url=page_url, method="recipe", fields=fields,
                 source_title=page.title(), extraction_confidence=0.9, context=source_name, context_kind="caption",
                 block_id=f"recipe:{recipe.container}", fetched_at=fetched_at))
-        run.pages, run.ok = 1, bool(run.rows)
+        run.pages, run.ok, run.stopped = 1, bool(run.rows), "single_page"
         run.title, run.final_url = page.title(), page_url
         if not run.rows:
             run.note = "the container held no identifiable items"
@@ -483,6 +517,9 @@ def run_recipe(engine: "BrowserEngine", url: str, recipe: Recipe, *, source_name
         page = context.new_page()
         page.set_default_timeout(timeout_ms)
         goto(page, url, timeout_ms)
+        if looks_like_error_page(page.url, page.title()):
+            run.note, run.stopped = "the site answered with an error page", "error_page"
+            return run
         for step in recipe.ready_steps:
             if not _click(page, step, timeout_ms) and not step.optional:
                 run.note = f"step '{step.click or step.click_text}' not found"
@@ -517,10 +554,19 @@ def run_recipe(engine: "BrowserEngine", url: str, recipe: Recipe, *, source_name
             run.ok = True
             if rows and new_on_page == 0 and known:
                 run.stopped_at_known = True  # everything on this page was read before
+                run.stopped = "known_records"
                 break
-            if run.pages >= pages_wanted or (deadline is not None and time.monotonic() >= deadline):
+            if run.pages >= pages_wanted:
+                run.stopped = "max_pages" if recipe.pagination.type != "none" else "single_page"
                 break
-            if not rows or not _next_page(page, recipe, run.pages + 1, rows[0][recipe.id_field], timeout_ms):
+            if deadline is not None and time.monotonic() >= deadline:
+                run.stopped = "time_budget"
+                break
+            if not rows:
+                run.stopped = "last_page"
+                break
+            if not _next_page(page, recipe, run.pages + 1, rows[0][recipe.id_field], timeout_ms):
+                run.stopped = "last_page" if recipe.pagination.type == "none" else "no_next_page"
                 break
         run.title = page.title()
         run.final_url = canonical_url(page.url)

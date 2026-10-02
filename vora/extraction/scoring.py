@@ -159,7 +159,9 @@ class ObservationScorer:
         self.block_support = block_support
         self.today = today or today_utc()
         required = [item for item in self.plan.required_concepts if item.kind != "time"]
+        self._stand_in = False
         if self.plan.answer_shape == "either" and not required:
+            self._stand_in = True
             # The request names no measure: numbers about the subject are one kind of
             # answer (records are the other). This is scoring machinery, not a
             # requirement the user sees.
@@ -290,7 +292,8 @@ class ObservationScorer:
             elif match:
                 # Weak evidence counts toward the score but is never shown as the value.
                 reasons.append(f"Only weak evidence for '{concept.name}' ({match.field}, {match.credit:.2f})")
-            else:
+            elif not (self._stand_in and concept.name == "value"):
+                # Scoring machinery for a request that names no measure is not a gap the user should see.
                 reasons.append(f"No value for '{concept.name}'")
         statement = fields.get("statement", "") if observation.method in STATEMENT_METHODS else ""
         if statement and self.subject:
