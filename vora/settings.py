@@ -26,6 +26,9 @@ class AppSettings:
     # "api_key" (one shared key, cookie or X-API-Key) or "none". Empty picks api_key when
     # VORA_API_KEY is set, else none.
     auth: str = os.getenv("VORA_AUTH", "").strip().lower()
+    # The interactive API pages (/docs, /redoc, /openapi.json) list every endpoint. They are on while nobody has to
+    # sign in (local use) and off otherwise; VORA_DOCS=true or false overrides that.
+    docs: str = os.getenv("VORA_DOCS", "").strip().lower()
     supabase_url: str = os.getenv("SUPABASE_URL", "").strip().rstrip("/")
     supabase_jwt_audience: str = os.getenv("SUPABASE_JWT_AUDIENCE", "authenticated")
     # Only for projects that still sign tokens with a shared secret (HS256).
@@ -136,6 +139,14 @@ class AppSettings:
         if self.auth in {"supabase", "api_key", "none"}:
             return self.auth
         return "api_key" if self.api_key else "none"
+
+    @property
+    def docs_enabled(self) -> bool:
+        if self.docs in {"1", "true", "yes", "on"}:
+            return True
+        if self.docs in {"0", "false", "no", "off"}:
+            return False
+        return self.auth_mode == "none"
 
     def resolved_database_path(self) -> Path:
         return self.database_path if self.database_path.is_absolute() else ROOT / self.database_path

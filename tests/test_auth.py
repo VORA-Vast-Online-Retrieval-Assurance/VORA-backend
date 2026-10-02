@@ -5,6 +5,7 @@ os.environ["VORA_PROBE_SOURCES"] = "false"
 os.environ["VORA_RESOLVER_SITES"] = "0"
 os.environ["VORA_SOURCE_CACHE"] = "false"
 os.environ["VORA_QUERY_CACHE_MINUTES"] = "0"
+os.environ["VORA_SEARXNG_URL"] = ""   # these tests describe the built-in browser search, whatever .env says
 
 import os
 """Sign-in: Supabase access tokens, per-user tracks, CORS.
@@ -85,6 +86,19 @@ class SupabaseAuthTests(TestCase):
         self.assertEqual(self.client.get("/api/v1/instances", headers={"Authorization": "Basic abc"}).status_code, 401)
         self.assertEqual(self.client.get("/api/v1/instances", headers={"Authorization": "Bearer not-a-token"}).status_code, 401)
         self.assertEqual(self.client.get("/api/v1/instances", headers=as_user()).status_code, 200)
+
+    def test_a_stranger_sees_only_yes_or_no_and_no_api_map(self) -> None:
+        stranger = self.client.get("/api/v1/ready")
+        self.assertEqual(set(stranger.json()), {"ready"})                     # no browser path, models or memory
+        signed_in = self.client.get("/api/v1/ready", headers=as_user()).json()
+        self.assertIn("free_memory_mb", signed_in)
+        self.assertEqual(application.docs_paths(application.settings.docs_enabled)["openapi_url"], None)
+        shown = dataclasses.replace(application.settings, docs="true")
+        self.assertEqual(application.docs_paths(shown.docs_enabled)["docs_url"], "/docs")
+        self.assertEqual(dataclasses.replace(application.settings, docs="").docs_enabled, False)      # sign-in on: off
+        self.assertEqual(dataclasses.replace(application.settings, auth="none", docs="").docs_enabled, True)
+        self.assertNotIn("docs", self.client.get("/").json())
+        self.assertEqual(self.client.get("/health").headers["x-content-type-options"], "nosniff")
 
     def test_bad_tokens_are_rejected(self) -> None:
         for headers in (as_user(expires_in=-3600), as_user(audience="anon"),

@@ -17,6 +17,7 @@ from fastapi import (
     APIRouter, Depends, FastAPI, Header, HTTPException, Query, Request, Response, WebSocket,
     WebSocketDisconnect, WebSocketException, status,
 )
+from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 from starlette.requests import HTTPConnection
@@ -59,7 +60,14 @@ async def lifespan(_: FastAPI):
     coordinator.shutdown()
 
 
-app = FastAPI(title="VORA", description="Vast Online Retrieval & Assurance", version=VERSION, docs_url="/docs", lifespan=lifespan)
+def docs_paths(enabled: bool) -> dict[str, str | None]:
+    """Where the interactive API pages live, or nowhere (a deployed API does not publish its own map)."""
+    return ({"docs_url": "/docs", "redoc_url": "/redoc", "openapi_url": "/openapi.json"} if enabled
+            else {"docs_url": None, "redoc_url": None, "openapi_url": None})
+
+
+app = FastAPI(title="VORA", description="Vast Online Retrieval & Assurance", version=VERSION, lifespan=lifespan,
+              **docs_paths(settings.docs_enabled))
 router = APIRouter()
 
 
@@ -86,6 +94,8 @@ PUBLIC_PATHS = {"/version": 300}
 @app.middleware("http")
 async def cache_policy(request: Request, call_next):
     response = await call_next(request)
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("Referrer-Policy", "no-referrer")
     if "cache-control" not in response.headers:
         seconds = PUBLIC_PATHS.get(request.url.path)
         response.headers["Cache-Control"] = (f"public, max-age={seconds}" if seconds and request.method == "GET"
@@ -171,9 +181,19 @@ def health() -> dict:
 
 @app.get("/ready")
 @app.get("/api/v1/ready")
-def ready() -> JSONResponse:
-    result = coordinator.readiness()
-    return JSONResponse(result, status_code=200 if result["ready"] else 503)
+async def ready(request: Request) -> JSONResponse:
+    """Whether the server can run research. The details (browser path, models, memory) are for signed-in callers
+    only; anyone else (a load balancer, a monitor, a stranger) gets the yes or no."""
+    result = await run_in_threadpool(coordinator.readiness)
+    detailed = settings.auth_mode == "none"
+    if not detailed:
+        try:
+            await authorized(request, request.headers.get("x-api-key"))
+            detailed = True
+        except HTTPException:
+            pass
+    return JSONResponse(result if detailed else {"ready": result["ready"]},
+                        status_code=200 if result["ready"] else 503)
 
 
 @app.get("/version")
@@ -935,4 +955,5 @@ app.include_router(router, prefix="/api", dependencies=[Depends(authorized)], in
 @app.get("/", include_in_schema=False)
 def root() -> dict:
     """VORA is an API only; the web app is a separate site (the private VORA repository)."""
-    return {"name": "VORA", "version": VERSION, "api": "/api/v1", "docs": "/docs"}
+    body = {"name": "VORA", "version": VERSION, "api": "/api/v1"}
+    return {**body, "docs": "/docs"} if settings.docs_enabled else body
